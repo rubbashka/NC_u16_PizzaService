@@ -8,9 +8,6 @@ import org.netcracker.unc.group16.data.PizzasCRUD;
  */
 public class PizzaService {
     public static void main (String args[]){
-
-        System.out.println("Hello!!!");
-
         PizzasCRUD pizzasCRUD = new PizzasCRUD();
         pizzasCRUD.insertIntoPizzas();
 
