@@ -23,8 +23,8 @@ public class JDBC {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@localhost:1521:XE", "U16",
-                    "U16");
+                    "jdbc:oracle:thin:@srv2-ora18.net.billing.ru:1521:smrsupp", "IBR_TEST",
+                    "employer");
 
         } catch (SQLException e) {
 
