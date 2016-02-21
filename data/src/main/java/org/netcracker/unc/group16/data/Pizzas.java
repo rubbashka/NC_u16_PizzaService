@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 
-public class PizzasCRUD {
+public class Pizzas {
 
     //Create
     public void insertIntoPizzas(){

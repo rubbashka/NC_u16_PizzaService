@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-public class SaucesCRUD {
+public class Sauces {
 
     //Create
     //Без первичного ключа
@@ -29,7 +29,7 @@ public class SaucesCRUD {
             }
         }
         catch (java.sql.SQLException e){
-            System.out.println("Inserting into failed.");
+            System.out.println("Inserting into sauces failed.");
             e.printStackTrace();
         }
         try {

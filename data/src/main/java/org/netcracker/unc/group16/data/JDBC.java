@@ -3,8 +3,10 @@ package org.netcracker.unc.group16.data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Locale;
 
-/**
+
+ /**
  * Created by Ivan.Chikhanov on 19.02.2016.
  */
 
@@ -22,9 +24,16 @@ public class JDBC {
 
         Connection connection = null;
         try {
+            /*
+            Необходимо, иначе на некоторых машинах
+            может выдаваться ошибка
+            ORA-00604: error occurred at recursive SQL level 1
+            ORA-12705: Cannot access NLS data files or invalid environment specified
+             */
+            Locale.setDefault(new Locale("EN","US"));
             connection = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@localhost:1521:XE", "U16",
-                    "U16");
+                    "jdbc:oracle:thin:@localhost:1521:XE", "PIZZADB",
+                    "PIZZADB");
 
         } catch (SQLException e) {
 

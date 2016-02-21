@@ -13,8 +13,8 @@ END IF;
 
 EXECUTE IMMEDIATE 'CREATE TABLE SAUCES(
 sc_id NUMBER(3),
-def VARCHAR2(20) CONSTRAINT sc_def_nn NOT NULL,
-comments VARCHAR2(100),
+def VARCHAR2(20 CHAR) CONSTRAINT sc_def_nn NOT NULL,
+comments VARCHAR2(100 CHAR),
 CONSTRAINT sc_id_pk PRIMARY KEY (sc_id))';
 
 nCount:=0;--sequence and trigger for primary key

@@ -15,8 +15,8 @@ EXECUTE IMMEDIATE 'CREATE TABLE DRINKS(
 drnk_id NUMBER(4),
 volume NUMBER(5),
 price NUMBER(4),
-def VARCHAR2(20) CONSTRAINT drnk_def_nn NOT NULL,
-comments VARCHAR2(100),
+def VARCHAR2(20 CHAR) CONSTRAINT drnk_def_nn NOT NULL,
+comments VARCHAR2(100 CHAR),
 CONSTRAINT drnk_id_pk PRIMARY KEY (drnk_id))';
 
 nCount:=0;--sequence and trigger for primary key

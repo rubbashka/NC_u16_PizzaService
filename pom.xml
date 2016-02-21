@@ -28,11 +28,26 @@
         <module>view</module>
     </modules>
 
+    <!--Создаем репозиторий Мавен, в который положим ojdbc6 -->
+    <repositories>
+        <repository>
+            <id>libraries</id>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${project.baseUri}libraries</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
-            <version>11.2.0</version>
+            <version>11.2.0.4</version>
         </dependency>
     </dependencies>
 

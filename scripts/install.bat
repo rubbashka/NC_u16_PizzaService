@@ -1,3 +1,3 @@
-rem необходимо установить нужную кодировку
-set NLS_LANG=.UTF8
-sqlplus U16/U16@XE @setup.sql
+rem Server encoding: AMERICAN_AMERICA.AL32UTF8
+set NLS_LANG=AMERICAN_AMERICA.AL32UTF8
+sqlplus PIZZADB/PIZZADB@XE @setup.sql
