@@ -12,11 +12,11 @@ IF nCount <> 0 THEN
 END IF;
 
 EXECUTE IMMEDIATE 'CREATE TABLE DRINKS(
-drnk_id NUMBER(4),
-volume NUMBER(5),
-price NUMBER(4),
-def VARCHAR2(20 CHAR) CONSTRAINT drnk_def_nn NOT NULL,
-comments VARCHAR2(100 CHAR),
+drnk_id NUMBER(5),
+volume NUMBER(10),
+price NUMBER(10),
+def VARCHAR2(50 CHAR) CONSTRAINT drnk_def_nn NOT NULL,
+comments VARCHAR2(200 CHAR),
 CONSTRAINT drnk_id_pk PRIMARY KEY (drnk_id))';
 
 nCount:=0;--sequence and trigger for primary key

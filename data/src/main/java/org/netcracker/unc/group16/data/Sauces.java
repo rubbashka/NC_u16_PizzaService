@@ -76,4 +76,36 @@ public class Sauces {
         }
     }
 
+    public void delete(int scID) {
+        JDBC jdbc = new JDBC();
+        Connection conn = jdbc.setConnection();
+
+        String sql = "DELETE FROM SAUCES WHERE SC_ID = ?";
+        try{
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, scID);
+
+            preparedStatement.executeUpdate();
+            int rowsInserted = preparedStatement.executeUpdate();
+            System.out.println(rowsInserted);
+            if (rowsInserted > 0) {
+                System.out.println("Deleting form SAUCES successfully.");
+            }
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Deleting failed.");
+            e.printStackTrace();
+        }
+        finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (java.sql.SQLException e) {
+                    System.out.println("Closing connection failed.");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }

@@ -11,6 +11,7 @@ public class PizzaService {
        // pizzasCRUD.insertIntoPizzas();
 
         Sauces saucesCRUD = new Sauces();
-        saucesCRUD.insertIntoSauces("Тестовый соус", "С очень вкусным описанием");
+//        saucesCRUD.insertIntoSauces("Перчик ", "С очень вкусным описанием");
+        saucesCRUD.delete(4);
     }
 }
