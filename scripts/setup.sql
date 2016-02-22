@@ -1,4 +1,4 @@
 PROMPT setup...
-@database_structure.sql
-@insert_values.sql
+@database_structure\database_structure.sql
+@inserting_values\insert_values.sql
 exit
