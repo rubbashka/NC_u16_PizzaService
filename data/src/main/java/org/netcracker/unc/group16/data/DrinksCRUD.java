@@ -11,17 +11,17 @@ public class DrinksCRUD {
         jdbc = new JDBC();
     }
 
-    public void create(int volume, int price, String def, String comments){
+    public void create(Drink drink){
         Connection con = jdbc.setConnection();
 
         String sql = "INSERT INTO DRINKS (VOLUME, PRICE, DEF, COMMENTS) VALUES (?, ?, ?, ?)";
 
         try{
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, volume);
-            ps.setInt(2, price);
-            ps.setString(3, def);
-            ps.setString(4, comments);
+            ps.setInt(1, drink.getVolume());
+            ps.setInt(2, drink.getPrice());
+            ps.setString(3, drink.getDef());
+            ps.setString(4, drink.getComments());
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
