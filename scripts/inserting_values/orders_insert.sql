@@ -1,3 +1,4 @@
+PROMPT orders_insert...
 INSERT INTO ORDERS (ord_id, clnt_clnt_id, order_date, delivery_date, comments)
 VALUES (null, 1, sysdate, sysdate + 30/24/60, null);
 INSERT INTO ORDERS (ord_id, clnt_clnt_id, order_date, delivery_date, comments)

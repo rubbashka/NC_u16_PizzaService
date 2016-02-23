@@ -5,12 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Locale;
 
-
- /**
- * Created by Ivan.Chikhanov on 19.02.2016.
- */
-
-
 public class JDBC {
     public Connection setConnection(){
         try {
@@ -31,8 +25,8 @@ public class JDBC {
              */
             Locale.setDefault(new Locale("EN","US"));
             connection = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@localhost:1521:XE", "PIZZADB",
-                    "PIZZADB");
+                    "jdbc:oracle:thin:@srv2-ora18.net.billing.ru:1521:smrsupp", "IBR_TEST",
+                    "employer");
 
         } catch (SQLException e) {
 
