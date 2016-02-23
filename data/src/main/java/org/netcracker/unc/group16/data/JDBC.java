@@ -25,8 +25,7 @@ public class JDBC {
         Connection connection = null;
         try {
             /*
-            Необходимо, иначе на некоторых машинах
-            может выдаваться ошибка
+            Р’С‹СЃС‚Р°РІР»СЏРµРј Р»РѕРєР°Р»СЊ, С‡С‚РѕР±С‹ РЅРµ РІС‹РґР°РІР°Р»Р°СЃСЊ РѕС€РёР±РєР°
             ORA-00604: error occurred at recursive SQL level 1
             ORA-12705: Cannot access NLS data files or invalid environment specified
              */
