@@ -3,15 +3,11 @@ package org.netcracker.unc.group16.data;
 import java.sql.*;
 
 
-public class Drinks {
-    private int volume;
-    private int price;
-    private String def;
-    private String comments;
+public class DrinksCRUD {
 
     private JDBC jdbc;
 
-    public Drinks() {
+    public DrinksCRUD() {
         jdbc = new JDBC();
     }
 
@@ -29,11 +25,6 @@ public class Drinks {
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                this.volume =  volume;
-                this.price = price;
-                this.def = def;
-                this.comments = comments;
-
                 System.out.println("Inserted into DRINKS successfully.");
             }
         }
@@ -46,24 +37,26 @@ public class Drinks {
         }
     }
 
-    public void read(int drinkId) {
+    public Drink read(int id) {
         Connection con = jdbc.setConnection();
 
         String sql = "SELECT * FROM DRINKS WHERE DRNK_ID=?";
 
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, drinkId);
+            ps.setInt(1, id);
 
             ResultSet res = ps.executeQuery();
             if (res.next()) {
-                volume = res.getInt(2);
-                price = res.getInt(3);
-                def = res.getString(4);
-                comments = res.getString(5);
+                Drink drink = new Drink();
+                drink.setVolume(res.getInt(2));
+                drink.setPrice(res.getInt(3));
+                drink.setDef(res.getString(4));
+                drink.setComments(res.getString(5));
                 System.out.println("Reading successful.");
-            }
 
+                return drink;
+            }
         }
         catch (SQLException e) {
             System.out.println("Reading failed.");
@@ -72,20 +65,22 @@ public class Drinks {
         finally {
             closeConnection(con);
         }
+
+        return null;
     }
 
-    public void update(int drinkId) {
+    public void update(Drink drink) {
         Connection con = jdbc.setConnection();
 
         String sql = "UPDATE DRINKS SET VOLUME=?, PRICE=?, DEF=?, COMMENTS=? WHERE DRNK_ID=?";
 
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, volume);
-            ps.setInt(2, price);
-            ps.setString(3, def);
-            ps.setString(4, comments);
-            ps.setInt(5, drinkId);
+            ps.setInt(1, drink.getVolume());
+            ps.setInt(2, drink.getPrice());
+            ps.setString(3, drink.getDef());
+            ps.setString(4, drink.getComments());
+            ps.setInt(5, drink.getId());
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
@@ -138,35 +133,4 @@ public class Drinks {
     }
 
 
-    public int getVolume() {
-        return volume;
-    }
-
-    public void setVolume(int volume) {
-        this.volume = volume;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public String getDef() {
-        return def;
-    }
-
-    public void setDef(String def) {
-        this.def = def;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
 }
