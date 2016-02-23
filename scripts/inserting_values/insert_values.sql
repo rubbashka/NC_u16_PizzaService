@@ -6,8 +6,8 @@ PROMPT insert_values...
 @@pizzas_insert.sql
 @@measurement_units_insert.sql
 @@pizzas_ingredients_insert.sql
+@@clients_insert.sql
+@@orders_insert.sql
 @@orders_pizzas_insert.sql
 @@orders_drinks_insert.sql
 @@orders_sauces_insert.sql
-@@clients_insert.sql
-@@orders_insert.sql

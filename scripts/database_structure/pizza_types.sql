@@ -12,7 +12,7 @@ IF nCount <> 0 THEN
 END IF;
 
 EXECUTE IMMEDIATE 'CREATE TABLE PIZZA_TYPES(
-pztp_id NUMBER(5),
+pztp_id NUMBER(10),
 def VARCHAR2(50 CHAR),
 CONSTRAINT pztp_id_pk PRIMARY KEY (pztp_id))';
 

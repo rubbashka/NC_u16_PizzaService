@@ -12,15 +12,15 @@ IF nCount <> 0 THEN
 END IF;
 
 EXECUTE IMMEDIATE 'CREATE TABLE PIZZAS(
-pz_id NUMBER(5),
+pz_id NUMBER(10),
 def VARCHAR2(50 CHAR),
-pztp_pztp_id NUMBER(2),
+pztp_pztp_id NUMBER(10),
 weight NUMBER(10),
 price NUMBER(10),
 comments VARCHAR2(200 CHAR),
 CONSTRAINT pz_id_pk PRIMARY KEY (pz_id),
 CONSTRAINT pz_pztp_id_fk FOREIGN KEY (pztp_pztp_id)
-REFERENCES PIZZA_TYPES (pztp_id) ON DELETE SET NULL)';
+REFERENCES PIZZA_TYPES (pztp_id) ON DELETE CASCADE)';
 
 nCount:=0;--sequence and trigger for primary key
 SELECT COUNT(*)
