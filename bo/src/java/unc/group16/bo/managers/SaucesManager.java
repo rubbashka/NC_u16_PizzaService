@@ -1,4 +1,6 @@
-package org.netcracker.unc.group16.data;
+package unc.group16.bo.managers;
+
+import unc.group16.bo.JDBC;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -6,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-public class Sauces {
+public class SaucesManager {
 
     //Create
     //Без первичного ключа

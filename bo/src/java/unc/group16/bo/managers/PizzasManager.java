@@ -1,10 +1,12 @@
-package org.netcracker.unc.group16.data;
+package unc.group16.bo.managers;
+
+import unc.group16.bo.JDBC;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 
-public class Pizzas {
+public class PizzasManager {
 
     //Create
     public void insertIntoPizzas(){

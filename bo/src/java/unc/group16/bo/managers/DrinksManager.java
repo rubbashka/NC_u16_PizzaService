@@ -1,13 +1,16 @@
-package org.netcracker.unc.group16.data;
+package unc.group16.bo.managers;
+
+import unc.group16.data.Drink;
+import unc.group16.bo.JDBC;
 
 import java.sql.*;
 
 
-public class DrinksCRUD {
+public class DrinksManager {
 
     private JDBC jdbc;
 
-    public DrinksCRUD() {
+    public DrinksManager() {
         jdbc = new JDBC();
     }
 
@@ -37,14 +40,14 @@ public class DrinksCRUD {
         }
     }
 
-    public Drink read(int id) {
+    public Drink read(Long id) {
         Connection con = jdbc.setConnection();
 
         String sql = "SELECT * FROM DRINKS WHERE DRNK_ID=?";
 
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
 
             ResultSet res = ps.executeQuery();
             if (res.next()) {
@@ -80,7 +83,7 @@ public class DrinksCRUD {
             ps.setInt(2, drink.getPrice());
             ps.setString(3, drink.getDef());
             ps.setString(4, drink.getComments());
-            ps.setInt(5, drink.getId());
+            ps.setLong(5, drink.getId());
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
@@ -97,13 +100,13 @@ public class DrinksCRUD {
         }
     }
 
-    public void delete(int drinkId) {
+    public void delete(Long id) {
         Connection conn = jdbc.setConnection();
 
         String sql = "DELETE FROM DRINKS WHERE DRNK_ID = ?";
         try{
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, drinkId);
+            ps.setLong(1, id);
 
             int rows = ps.executeUpdate();
             if (rows > 0) {

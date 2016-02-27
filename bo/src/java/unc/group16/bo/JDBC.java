@@ -1,4 +1,4 @@
-package org.netcracker.unc.group16.data;
+package unc.group16.bo;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

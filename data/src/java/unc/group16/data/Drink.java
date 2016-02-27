@@ -1,33 +1,33 @@
-package org.netcracker.unc.group16.data;
+package unc.group16.data;
 
 public class Drink {
-    private int id;
-    private int volume;
-    private int price;
+    private Long id;
+    private Integer volume;
+    private Integer price;
     private String def;
     private String comments;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getVolume() {
+    public Integer getVolume() {
         return volume;
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(Integer volume) {
         this.volume = volume;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
