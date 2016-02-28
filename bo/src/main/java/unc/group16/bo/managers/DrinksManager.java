@@ -23,12 +23,12 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                System.out.println("Inserted into DRINKS successfully.");
+                log.debug("Inserted into DRINKS successfully");
                 return drink;
             }
         }
         catch (SQLException e) {
-            System.out.println("Inserting failed.");
+            log.error("Inserting failed");
             e.printStackTrace();
         }
         finally {
@@ -54,13 +54,13 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
                 drink.setPrice(res.getInt(3));
                 drink.setDef(res.getString(4));
                 drink.setComments(res.getString(5));
-                System.out.println("Reading successful.");
+                log.debug("Reading successful");
 
                 return drink;
             }
         }
         catch (SQLException e) {
-            System.out.println("Reading failed.");
+            log.error("Reading failed");
             e.printStackTrace();
         }
         finally {
@@ -85,13 +85,13 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                System.out.println("Updating successful.");
+                log.debug("Updating successful");
                 return drink;
             }
 
         }
         catch (SQLException e) {
-            System.out.println("Updating failed.");
+            log.error("Updating failed");
             e.printStackTrace();
         }
         finally {
@@ -111,13 +111,13 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
-                System.out.println("Deleting successful.");
+                log.debug("Deleting successful");
             } else {
-                System.out.println("Nothing to delete.");
+                log.error("Unable to find a record with id " + id);
             }
         }
         catch (SQLException e) {
-            System.out.println("Deleting failed.");
+            log.error("Deleting failed");
             e.printStackTrace();
         }
         finally {

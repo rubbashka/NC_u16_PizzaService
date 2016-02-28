@@ -1,5 +1,6 @@
 package unc.group16.bo.interfaces;
 
+import org.apache.log4j.Logger;
 import unc.group16.bo.JDBC;
 
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 
 public abstract class DatabaseManager {
     private JDBC jdbc;
+    public static final Logger log = Logger.getLogger(DatabaseManager.class);
 
     public DatabaseManager() {
         jdbc = new JDBC();
@@ -18,7 +20,7 @@ public abstract class DatabaseManager {
             try {
                 connection.close();
             } catch (SQLException e) {
-                System.out.println("Closing connection failed.");
+                log.error("An error occurred while closing the connection");
                 e.printStackTrace();
             }
         }
