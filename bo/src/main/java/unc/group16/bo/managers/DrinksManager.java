@@ -1,21 +1,16 @@
 package unc.group16.bo.managers;
 
+import unc.group16.bo.interfaces.DatabaseManager;
+import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Drink;
-import unc.group16.bo.JDBC;
 
 import java.sql.*;
 
 
-public class DrinksManager {
+public class DrinksManager extends DatabaseManager implements Manager<Drink> {
 
-    private JDBC jdbc;
-
-    public DrinksManager() {
-        jdbc = new JDBC();
-    }
-
-    public void create(Drink drink){
-        Connection con = jdbc.setConnection();
+    public Drink create(Drink drink){
+        Connection con = getJDBC().setConnection();
 
         String sql = "INSERT INTO DRINKS (VOLUME, PRICE, DEF, COMMENTS) VALUES (?, ?, ?, ?)";
 
@@ -29,6 +24,7 @@ public class DrinksManager {
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 System.out.println("Inserted into DRINKS successfully.");
+                return drink;
             }
         }
         catch (SQLException e) {
@@ -38,10 +34,12 @@ public class DrinksManager {
         finally {
             closeConnection(con);
         }
+
+        return null;
     }
 
     public Drink read(Long id) {
-        Connection con = jdbc.setConnection();
+        Connection con = getJDBC().setConnection();
 
         String sql = "SELECT * FROM DRINKS WHERE DRNK_ID=?";
 
@@ -72,8 +70,8 @@ public class DrinksManager {
         return null;
     }
 
-    public void update(Drink drink) {
-        Connection con = jdbc.setConnection();
+    public Drink update(Drink drink) {
+        Connection con = getJDBC().setConnection();
 
         String sql = "UPDATE DRINKS SET VOLUME=?, PRICE=?, DEF=?, COMMENTS=? WHERE DRNK_ID=?";
 
@@ -88,6 +86,7 @@ public class DrinksManager {
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 System.out.println("Updating successful.");
+                return drink;
             }
 
         }
@@ -98,10 +97,12 @@ public class DrinksManager {
         finally {
             closeConnection(con);
         }
+
+        return null;
     }
 
     public void delete(Long id) {
-        Connection conn = jdbc.setConnection();
+        Connection conn = getJDBC().setConnection();
 
         String sql = "DELETE FROM DRINKS WHERE DRNK_ID = ?";
         try{
@@ -123,17 +124,4 @@ public class DrinksManager {
             closeConnection(conn);
         }
     }
-
-    private void closeConnection(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                System.out.println("Closing connection failed.");
-                e.printStackTrace();
-            }
-        }
-    }
-
-
 }
