@@ -8,28 +8,34 @@ import java.sql.*;
 
 
 public class DrinksManager extends DatabaseManager implements Manager<Drink> {
+    public static String TABLE_NAME = "DRINKS";
+    public static String ID_COLUMN_NAME = "DRNK_ID";
 
     public Drink create(Drink drink){
         Connection con = getJDBC().setConnection();
 
-        String sql = "INSERT INTO DRINKS (VOLUME, PRICE, DEF, COMMENTS) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO " + TABLE_NAME + " VALUES (null, ?, ?, ?, ?)";
 
         try{
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, drink.getVolume());
-            ps.setInt(2, drink.getPrice());
-            ps.setString(3, drink.getDef());
+            ps.setBigDecimal(2, drink.getPrice());
+            ps.setString(3, drink.getName());
             ps.setString(4, drink.getComments());
 
             int rows = ps.executeUpdate();
-            if (rows > 0) {
-                log.debug("Inserted into DRINKS successfully");
-                return drink;
+
+            // Получение id записи
+            ResultSet resSet = con.createStatement().executeQuery("SELECT MAX(" + ID_COLUMN_NAME + ") FROM " + TABLE_NAME + "");
+            if (resSet.next() && rows > 0) {
+                log.debug("Inserted successfully");
+                Drink result = (Drink) drink.clone();
+                result.setId(resSet.getLong(1));
+                return result;
             }
         }
         catch (SQLException e) {
-            log.error("Inserting failed");
-            e.printStackTrace();
+            log.error("Inserting failed", e);
         }
         finally {
             closeConnection(con);
@@ -41,7 +47,7 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
     public Drink read(Long id) {
         Connection con = getJDBC().setConnection();
 
-        String sql = "SELECT * FROM DRINKS WHERE DRNK_ID=?";
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + "=?";
 
         try {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -50,9 +56,10 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
             ResultSet res = ps.executeQuery();
             if (res.next()) {
                 Drink drink = new Drink();
+                drink.setId(res.getLong(1));
                 drink.setVolume(res.getInt(2));
-                drink.setPrice(res.getInt(3));
-                drink.setDef(res.getString(4));
+                drink.setPrice(res.getBigDecimal(3));
+                drink.setName(res.getString(4));
                 drink.setComments(res.getString(5));
                 log.debug("Reading successful");
 
@@ -60,8 +67,7 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
             }
         }
         catch (SQLException e) {
-            log.error("Reading failed");
-            e.printStackTrace();
+            log.error("Reading failed", e);
         }
         finally {
             closeConnection(con);
@@ -73,13 +79,13 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
     public Drink update(Drink drink) {
         Connection con = getJDBC().setConnection();
 
-        String sql = "UPDATE DRINKS SET VOLUME=?, PRICE=?, DEF=?, COMMENTS=? WHERE DRNK_ID=?";
+        String sql = "UPDATE " + TABLE_NAME + " SET VOLUME=?, PRICE=?, NAME=?, COMMENTS=? WHERE " + ID_COLUMN_NAME + "=?";
 
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, drink.getVolume());
-            ps.setInt(2, drink.getPrice());
-            ps.setString(3, drink.getDef());
+            ps.setBigDecimal(2, drink.getPrice());
+            ps.setString(3, drink.getName());
             ps.setString(4, drink.getComments());
             ps.setLong(5, drink.getId());
 
@@ -91,8 +97,7 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
 
         }
         catch (SQLException e) {
-            log.error("Updating failed");
-            e.printStackTrace();
+            log.error("Updating failed", e);
         }
         finally {
             closeConnection(con);
@@ -102,26 +107,6 @@ public class DrinksManager extends DatabaseManager implements Manager<Drink> {
     }
 
     public void delete(Long id) {
-        Connection conn = getJDBC().setConnection();
-
-        String sql = "DELETE FROM DRINKS WHERE DRNK_ID = ?";
-        try{
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setLong(1, id);
-
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                log.debug("Deleting successful");
-            } else {
-                log.error("Unable to find a record with id " + id);
-            }
-        }
-        catch (SQLException e) {
-            log.error("Deleting failed");
-            e.printStackTrace();
-        }
-        finally {
-            closeConnection(conn);
-        }
+        delete(TABLE_NAME, ID_COLUMN_NAME, id);
     }
 }
