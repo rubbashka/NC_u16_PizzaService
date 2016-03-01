@@ -15,7 +15,7 @@ public class PizzaService {
     }
 
     public static void main (String args[]){
-        if(logger.isDebugEnabled()){
+        /*if(logger.isDebugEnabled()){
             logger.debug("This is debug");
         }
 
@@ -23,8 +23,13 @@ public class PizzaService {
         logger.error("This is error : ");
 
         //logs an exception thrown from somewhere
-        logger.error("This is error");
+        logger.error("This is error");*/
+//        Console console = new Console();
+//        console.start();
         DrinksManager drinks = new DrinksManager();
+        Long id = new Long(2);
+        drinks.delete(id);
+
     }
 
 }

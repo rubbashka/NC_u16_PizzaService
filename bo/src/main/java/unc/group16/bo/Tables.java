@@ -1,0 +1,10 @@
+package unc.group16.bo;
+
+/**
+ * Created by Ivan on 01.03.2016.
+ */
+public enum Tables {
+    CLIENTS, DRINKS, INGREDIENTS, MEASUREMENT_UNITS,
+    ORDERS, ORDERS_DRINKS, ORDERS_PIZZAS, ORDERS_SAUCES,
+    PIZZAS, PIZZAS_INGREDIENTS, SAUCES
+}

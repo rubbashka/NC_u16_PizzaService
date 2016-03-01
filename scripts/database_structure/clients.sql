@@ -16,7 +16,7 @@ clnt_id NUMBER(10),
 name VARCHAR2(100 CHAR),
 address VARCHAR2(200 CHAR),
 home VARCHAR2(100 CHAR),
-appartment VARCHAR2(100 CHAR),
+apartment VARCHAR2(100 CHAR),
 phone_number VARCHAR2(20),
 comments VARCHAR2(200 CHAR),
 CONSTRAINT clnt_id_pk PRIMARY KEY (clnt_id))';
