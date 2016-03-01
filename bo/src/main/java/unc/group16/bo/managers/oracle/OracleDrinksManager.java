@@ -17,7 +17,7 @@ public class OracleDrinksManager extends AbstractDatabaseManager implements Mana
         String sql = "INSERT INTO " + TABLE_NAME + " VALUES (null, ?, ?, ?, ?)";
 
         try{
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, drink.getVolume());
             ps.setBigDecimal(2, drink.getPrice());
             ps.setString(3, drink.getName());
@@ -26,13 +26,21 @@ public class OracleDrinksManager extends AbstractDatabaseManager implements Mana
             int rows = ps.executeUpdate();
 
             // Получение id записи
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next() && rs != null){
+                log.debug("Inserted successfully");
+                Drink result = (Drink) drink.clone();
+                result.setId(rs.getLong(1));
+                return result;
+            }
+            /*
             ResultSet resSet = con.createStatement().executeQuery("SELECT MAX(" + ID_COLUMN_NAME + ") FROM " + TABLE_NAME + "");
             if (resSet.next() && rows > 0) {
                 log.debug("Inserted successfully");
                 Drink result = (Drink) drink.clone();
                 result.setId(resSet.getLong(1));
                 return result;
-            }
+            }*/
         }
         catch (SQLException e) {
             log.error("Inserting failed", e);
