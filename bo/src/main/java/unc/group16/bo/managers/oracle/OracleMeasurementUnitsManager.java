@@ -1,8 +1,8 @@
-package unc.group16.bo.managers;
+package unc.group16.bo.managers.oracle;
 
-import unc.group16.bo.interfaces.DatabaseManager;
+import unc.group16.bo.interfaces.AbstractDatabaseManager;
 import unc.group16.bo.interfaces.Manager;
-import unc.group16.data.Pizza;
+import unc.group16.data.MeasurementUnit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,30 +10,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class PizzasManager extends DatabaseManager implements Manager<Pizza> {
-    public static String TABLE_NAME = "PIZZAS";
-    public static String ID_COLUMN_NAME = "PZ_ID";
-    
-    public Pizza create(Pizza pizza){
+public class OracleMeasurementUnitsManager extends AbstractDatabaseManager implements Manager<MeasurementUnit> {
+    public static String TABLE_NAME = "MEASUREMENT_UNITS";
+    public static String ID_COLUMN_NAME = "MSRU_ID";
+
+    public MeasurementUnit create(MeasurementUnit mu){
         Connection con = getJDBC().setConnection();
-        
-        String sql = "INSERT INTO " + TABLE_NAME + " VALUES (null, ?, ?, ?, ?, ?)";
-        
+
+        String sql = "INSERT INTO " + TABLE_NAME + " VALUES (null, ?)";
+
         try{
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, pizza.getName());
-            ps.setString(2, pizza.getType());
-            ps.setInt(3, pizza.getWeight());
-            ps.setBigDecimal(4, pizza.getPrice());
-            ps.setString(5, pizza.getComments());
-            
+            ps.setString(1, mu.getName());
+
             int rows = ps.executeUpdate();
-            
+
             // Получение id записи
             ResultSet resSet = con.createStatement().executeQuery("SELECT MAX(" + ID_COLUMN_NAME + ") FROM " + TABLE_NAME + "");
             if (resSet.next() && rows > 0) {
                 log.debug("Inserted successfully");
-                Pizza result = (Pizza) pizza.clone();
+                MeasurementUnit result = (MeasurementUnit) mu.clone();
                 result.setId(resSet.getLong(1));
                 return result;
             }
@@ -44,31 +40,27 @@ public class PizzasManager extends DatabaseManager implements Manager<Pizza> {
         finally {
             closeConnection(con);
         }
-        
+
         return null;
     }
-    
-    public Pizza read(Long id) {
+
+    public MeasurementUnit read(Long id) {
         Connection con = getJDBC().setConnection();
-        
+
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + "=?";
-        
+
         try {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setLong(1, id);
-            
+
             ResultSet res = ps.executeQuery();
             if (res.next()) {
-                Pizza pizza = new Pizza();
-                pizza.setId(res.getLong(1));
-                pizza.setName(res.getString(2));
-                pizza.setType(res.getString(3));
-                pizza.setWeight(res.getInt(4));
-                pizza.setPrice(res.getBigDecimal(5));
-                pizza.setComments(res.getString(6));
+                MeasurementUnit mu = new MeasurementUnit();
+                mu.setId(res.getLong(1));
+                mu.setName(res.getString(2));
                 log.debug("Reading successful");
-                
-                return pizza;
+
+                return mu;
             }
         }
         catch (SQLException e) {
@@ -77,30 +69,26 @@ public class PizzasManager extends DatabaseManager implements Manager<Pizza> {
         finally {
             closeConnection(con);
         }
-        
+
         return null;
     }
-    
-    public Pizza update(Pizza pizza) {
+
+    public MeasurementUnit update(MeasurementUnit mu) {
         Connection con = getJDBC().setConnection();
-        
-        String sql = "UPDATE " + TABLE_NAME + " SET NAME=?, TYPE=?, WHEIGHT=?, PRICE=?, COMMENTS=? WHERE " + ID_COLUMN_NAME + "=?";
-        
+
+        String sql = "UPDATE " + TABLE_NAME + " SET NAME=?, COMMENTS=? WHERE " + ID_COLUMN_NAME + "=?";
+
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, pizza.getName());
-            ps.setString(2, pizza.getType());
-            ps.setInt(3, pizza.getWeight());
-            ps.setBigDecimal(4, pizza.getPrice());
-            ps.setString(5, pizza.getComments());
-            ps.setLong(6, pizza.getId());
-            
+            ps.setString(1, mu.getName());
+            ps.setLong(2, mu.getId());
+
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 log.debug("Updating successful");
-                return pizza;
+                return mu;
             }
-            
+
         }
         catch (SQLException e) {
             log.error("Updating failed", e);
@@ -108,10 +96,10 @@ public class PizzasManager extends DatabaseManager implements Manager<Pizza> {
         finally {
             closeConnection(con);
         }
-        
+
         return null;
     }
-    
+
     public void delete(Long id) {
         delete(TABLE_NAME, ID_COLUMN_NAME, id);
     }

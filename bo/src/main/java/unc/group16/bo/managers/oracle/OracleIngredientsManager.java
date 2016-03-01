@@ -1,13 +1,13 @@
-package unc.group16.bo.managers;
+package unc.group16.bo.managers.oracle;
 
-import unc.group16.bo.interfaces.DatabaseManager;
+import unc.group16.bo.interfaces.AbstractDatabaseManager;
 import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Ingredient;
 
 import java.sql.*;
 
 
-public class IngredientsManager extends DatabaseManager implements Manager<Ingredient> {
+public class OracleIngredientsManager extends AbstractDatabaseManager implements Manager<Ingredient> {
     public static String TABLE_NAME = "INGREDIENTS";
     public static String ID_COLUMN_NAME = "INGRD_ID";
 

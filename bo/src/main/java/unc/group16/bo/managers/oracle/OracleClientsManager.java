@@ -1,13 +1,13 @@
-package unc.group16.bo.managers;
+package unc.group16.bo.managers.oracle;
 
-import unc.group16.bo.interfaces.DatabaseManager;
+import unc.group16.bo.interfaces.AbstractDatabaseManager;
 import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Client;
 
 import java.sql.*;
 
 
-public class ClientsManager extends DatabaseManager implements Manager<Client> {
+public class OracleClientsManager extends AbstractDatabaseManager implements Manager<Client> {
     public static String TABLE_NAME = "CLIENTS";
     public static String ID_COLUMN_NAME = "CLNT_ID";
 

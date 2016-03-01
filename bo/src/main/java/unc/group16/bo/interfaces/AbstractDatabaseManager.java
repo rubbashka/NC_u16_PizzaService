@@ -8,13 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 
-public abstract class DatabaseManager {
+public abstract class AbstractDatabaseManager {
     private JDBC jdbc;
-    public static final Logger log = Logger.getLogger(DatabaseManager.class);
+    public static final Logger log = Logger.getLogger(AbstractDatabaseManager.class);
 
     public static String TABLE_NAME;
 
-    public DatabaseManager() {
+    public AbstractDatabaseManager() {
         jdbc = new JDBC();
     }
 

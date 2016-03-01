@@ -1,6 +1,6 @@
-package unc.group16.bo.managers;
+package unc.group16.bo.managers.oracle;
 
-import unc.group16.bo.interfaces.DatabaseManager;
+import unc.group16.bo.interfaces.AbstractDatabaseManager;
 import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Sauce;
 
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class SaucesManager extends DatabaseManager implements Manager<Sauce> {
+public class OracleSaucesManager extends AbstractDatabaseManager implements Manager<Sauce> {
     public static String TABLE_NAME = "SAUCES";
     public static String ID_COLUMN_NAME = "SC_ID";
 
