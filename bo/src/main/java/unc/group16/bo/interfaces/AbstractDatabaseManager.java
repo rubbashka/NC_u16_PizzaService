@@ -12,8 +12,6 @@ public abstract class AbstractDatabaseManager {
     private JDBC jdbc;
     public static final Logger log = Logger.getLogger(AbstractDatabaseManager.class);
 
-    public static String TABLE_NAME;
-
     public AbstractDatabaseManager() {
         jdbc = new JDBC();
     }
@@ -32,8 +30,8 @@ public abstract class AbstractDatabaseManager {
         return jdbc;
     }
 
-    protected void delete(String tableName, String keyColumn, Long id) {
-        Connection conn = getJDBC().setConnection();
+    protected boolean delete(String tableName, String keyColumn, Long id) {
+        Connection conn = getJDBC().getConnection();
 
         String sql = "DELETE FROM " + tableName + " WHERE " + keyColumn + " = ?";
         try{
@@ -43,6 +41,7 @@ public abstract class AbstractDatabaseManager {
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 log.debug("Deleting successful");
+                return true;
             } else {
                 log.error("Unable to find a record with id " + id);
             }
@@ -53,5 +52,14 @@ public abstract class AbstractDatabaseManager {
         finally {
             closeConnection(conn);
         }
+        return false;
+    }
+
+    public JDBC getJdbc() {
+        return jdbc;
+    }
+
+    public void setJdbc(JDBC jdbc) {
+        this.jdbc = jdbc;
     }
 }

@@ -11,8 +11,8 @@ public class OracleOrdersManager extends AbstractDatabaseManager implements Mana
     public static String TABLE_NAME = "ORDERS";
     public static String ID_COLUMN_NAME = "ORD_ID";
     
-    public Order create(Order order){
-        Connection con = getJDBC().setConnection();
+    public Long create(Order order){
+        Connection con = getJDBC().getConnection();
         
         String sql = "INSERT INTO " + TABLE_NAME + " VALUES (null, ?, ?, ?, ?)";
         
@@ -29,9 +29,7 @@ public class OracleOrdersManager extends AbstractDatabaseManager implements Mana
             ResultSet resSet = con.createStatement().executeQuery("SELECT MAX(" + ID_COLUMN_NAME + ") FROM " + TABLE_NAME + "");
             if (resSet.next() && rows > 0) {
                 log.debug("Inserted successfully");
-                Order result = (Order) order.clone();
-                result.setId(resSet.getLong(1));
-                return result;
+                return resSet.getLong(1);
             }
         }
         catch (SQLException e) {
@@ -45,7 +43,7 @@ public class OracleOrdersManager extends AbstractDatabaseManager implements Mana
     }
     
     public Order read(Long id) {
-        Connection con = getJDBC().setConnection();
+        Connection con = getJDBC().getConnection();
         
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + "=?";
         
@@ -76,8 +74,8 @@ public class OracleOrdersManager extends AbstractDatabaseManager implements Mana
         return null;
     }
     
-    public Order update(Order order) {
-        Connection con = getJDBC().setConnection();
+    public boolean update(Order order) {
+        Connection con = getJDBC().getConnection();
         
         String sql = "UPDATE " + TABLE_NAME + " SET CLNT_CLNT_ID=?, ORDER_DATE=?, DELIVERY_DATE=?, COMMENTS=? WHERE " + ID_COLUMN_NAME + "=?";
 
@@ -92,7 +90,7 @@ public class OracleOrdersManager extends AbstractDatabaseManager implements Mana
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 log.debug("Updating successful");
-                return order;
+                return true;
             }
             
         }
@@ -103,10 +101,10 @@ public class OracleOrdersManager extends AbstractDatabaseManager implements Mana
             closeConnection(con);
         }
         
-        return null;
+        return false;
     }
-    
-    public void delete(Long id) {
-        delete(TABLE_NAME, ID_COLUMN_NAME, id);
+
+    public boolean delete(Long id) {
+        return delete(TABLE_NAME, ID_COLUMN_NAME, id);
     }
 }

@@ -14,8 +14,8 @@ public class OracleMeasurementUnitsManager extends AbstractDatabaseManager imple
     public static String TABLE_NAME = "MEASUREMENT_UNITS";
     public static String ID_COLUMN_NAME = "MSRU_ID";
 
-    public MeasurementUnit create(MeasurementUnit mu){
-        Connection con = getJDBC().setConnection();
+    public Long create(MeasurementUnit mu){
+        Connection con = getJDBC().getConnection();
 
         String sql = "INSERT INTO " + TABLE_NAME + " VALUES (null, ?)";
 
@@ -29,9 +29,7 @@ public class OracleMeasurementUnitsManager extends AbstractDatabaseManager imple
             ResultSet resSet = con.createStatement().executeQuery("SELECT MAX(" + ID_COLUMN_NAME + ") FROM " + TABLE_NAME + "");
             if (resSet.next() && rows > 0) {
                 log.debug("Inserted successfully");
-                MeasurementUnit result = (MeasurementUnit) mu.clone();
-                result.setId(resSet.getLong(1));
-                return result;
+                return resSet.getLong(1);
             }
         }
         catch (SQLException e) {
@@ -45,7 +43,7 @@ public class OracleMeasurementUnitsManager extends AbstractDatabaseManager imple
     }
 
     public MeasurementUnit read(Long id) {
-        Connection con = getJDBC().setConnection();
+        Connection con = getJDBC().getConnection();
 
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + "=?";
 
@@ -73,8 +71,8 @@ public class OracleMeasurementUnitsManager extends AbstractDatabaseManager imple
         return null;
     }
 
-    public MeasurementUnit update(MeasurementUnit mu) {
-        Connection con = getJDBC().setConnection();
+    public boolean update(MeasurementUnit mu) {
+        Connection con = getJDBC().getConnection();
 
         String sql = "UPDATE " + TABLE_NAME + " SET NAME=?, COMMENTS=? WHERE " + ID_COLUMN_NAME + "=?";
 
@@ -86,7 +84,7 @@ public class OracleMeasurementUnitsManager extends AbstractDatabaseManager imple
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 log.debug("Updating successful");
-                return mu;
+                return true;
             }
 
         }
@@ -97,10 +95,10 @@ public class OracleMeasurementUnitsManager extends AbstractDatabaseManager imple
             closeConnection(con);
         }
 
-        return null;
+        return false;
     }
 
-    public void delete(Long id) {
-        delete(TABLE_NAME, ID_COLUMN_NAME, id);
+    public boolean delete(Long id) {
+        return delete(TABLE_NAME, ID_COLUMN_NAME, id);
     }
 }

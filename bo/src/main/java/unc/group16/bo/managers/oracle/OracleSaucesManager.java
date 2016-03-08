@@ -14,8 +14,8 @@ public class OracleSaucesManager extends AbstractDatabaseManager implements Mana
     public static String TABLE_NAME = "SAUCES";
     public static String ID_COLUMN_NAME = "SC_ID";
 
-    public Sauce create(Sauce sauce){
-        Connection con = getJDBC().setConnection();
+    public Long create(Sauce sauce){
+        Connection con = getJDBC().getConnection();
 
         String sql = "INSERT INTO " + TABLE_NAME + " VALUES (null, ?, ?, ?)";
 
@@ -31,9 +31,7 @@ public class OracleSaucesManager extends AbstractDatabaseManager implements Mana
             ResultSet resSet = con.createStatement().executeQuery("SELECT MAX(" + ID_COLUMN_NAME + ") FROM " + TABLE_NAME + "");
             if (resSet.next() && rows > 0) {
                 log.debug("Inserted successfully");
-                Sauce result = (Sauce) sauce.clone();
-                result.setId(resSet.getLong(1));
-                return result;
+                return resSet.getLong(1);
             }
         }
         catch (SQLException e) {
@@ -47,7 +45,7 @@ public class OracleSaucesManager extends AbstractDatabaseManager implements Mana
     }
 
     public Sauce read(Long id) {
-        Connection con = getJDBC().setConnection();
+        Connection con = getJDBC().getConnection();
 
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + "=?";
 
@@ -77,8 +75,8 @@ public class OracleSaucesManager extends AbstractDatabaseManager implements Mana
         return null;
     }
 
-    public Sauce update(Sauce sauce) {
-        Connection con = getJDBC().setConnection();
+    public boolean update(Sauce sauce) {
+        Connection con = getJDBC().getConnection();
 
         String sql = "UPDATE " + TABLE_NAME + " SET PRICE=?, NAME=?, COMMENTS=? WHERE " + ID_COLUMN_NAME + "=?";
 
@@ -92,7 +90,7 @@ public class OracleSaucesManager extends AbstractDatabaseManager implements Mana
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 log.debug("Updating successful");
-                return sauce;
+                return true;
             }
 
         }
@@ -103,10 +101,10 @@ public class OracleSaucesManager extends AbstractDatabaseManager implements Mana
             closeConnection(con);
         }
 
-        return null;
+        return false;
     }
 
-    public void delete(Long id) {
-        delete(TABLE_NAME, ID_COLUMN_NAME, id);
+    public boolean delete(Long id) {
+        return delete(TABLE_NAME, ID_COLUMN_NAME, id);
     }
 }
