@@ -16,7 +16,7 @@ ord_id NUMBER(10),
 clnt_clnt_id NUMBER(10),
 order_date DATE,
 delivery_date DATE,
-comments VARCHAR2(200 CHAR),
+description VARCHAR2(200 CHAR),
 CONSTRAINT ord_id_pk PRIMARY KEY (ord_id),
 CONSTRAINT ord_clnt_id_fk FOREIGN KEY (clnt_clnt_id)
 REFERENCES CLIENTS (clnt_id) ON DELETE CASCADE)';
