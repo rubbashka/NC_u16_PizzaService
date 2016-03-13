@@ -1,44 +1,63 @@
 package unc.group16.data;
 
-public class Ingredient {
+import unc.group16.annotations.Column;
+import unc.group16.annotations.Table;
+import unc.group16.interfaces.TableRecord;
+
+
+@Table(name = "INGREDIENTS", columns = 3)
+public class Ingredient implements TableRecord {
+    @Column(id = 1, name = "INGRD_ID", isKey = true)
     private Long id;
-    private String name;
-    private String comments;
+
+    @Column(id = 2, name = "TITLE")
+    private String title;
+
+    @Column(id = 3, name = "DESCRIPTION")
+    private String description;
 
     public Ingredient() {}
 
-    public Ingredient(Long id, String name, String comments) {
+    public Ingredient(Long id, String title, String description) {
         this.id = id;
-        this.name = name;
-        this.comments = comments;
+        this.title = title;
+        this.description = description;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public Ingredient setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
-        return name;
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Ingredient setName(String title) {
+        this.title = title;
+        return this;
     }
 
     public String getComments() {
-        return comments;
+        return description;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public Ingredient setComments(String description) {
+        this.description = description;
+        return this;
     }
 
     @Override
     public Object clone() {
-        return new Ingredient(id, name, comments);
+        Ingredient result = null;
+        try {
+            result = (Ingredient) super.clone();
+        } catch (CloneNotSupportedException ignored) {
+        }
+        return result;
     }
 }
