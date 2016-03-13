@@ -13,11 +13,11 @@ END IF;
 
 EXECUTE IMMEDIATE 'CREATE TABLE PIZZAS(
 pz_id NUMBER(10),
-name VARCHAR2(50 CHAR),
+title VARCHAR2(50 CHAR) CONSTRAINT pz_title_nn NOT NULL,
 type VARCHAR2(50 CHAR),
 weight NUMBER(10),
 price NUMBER(10),
-comments VARCHAR2(200 CHAR),
+description VARCHAR2(200 CHAR),
 CONSTRAINT pz_id_pk PRIMARY KEY (pz_id))';
 
 nCount:=0;--sequence and trigger for primary key

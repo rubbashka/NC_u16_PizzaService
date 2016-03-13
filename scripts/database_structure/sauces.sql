@@ -14,8 +14,8 @@ END IF;
 EXECUTE IMMEDIATE 'CREATE TABLE SAUCES(
 sc_id NUMBER(10),
 price NUMBER(10),
-name VARCHAR2(50 CHAR) CONSTRAINT sc_name_nn NOT NULL,
-comments VARCHAR2(200 CHAR),
+title VARCHAR2(50 CHAR) CONSTRAINT sc_title_nn NOT NULL,
+description VARCHAR2(200 CHAR),
 CONSTRAINT sc_id_pk PRIMARY KEY (sc_id))';
 
 nCount:=0;--sequence and trigger for primary key

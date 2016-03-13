@@ -13,7 +13,7 @@ END IF;
 
 EXECUTE IMMEDIATE 'CREATE TABLE MEASUREMENT_UNITS(
 msru_id NUMBER(10),
-name VARCHAR2(100 CHAR),
+title VARCHAR2(100 CHAR),
 CONSTRAINT msru_id_pk PRIMARY KEY (msru_id))';
 
 nCount:=0;--sequence and trigger for primary key
