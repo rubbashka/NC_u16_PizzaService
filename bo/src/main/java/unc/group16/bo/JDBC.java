@@ -13,12 +13,16 @@ import java.util.Locale;
 public class JDBC {
     public static final Logger log = Logger.getLogger(JDBC.class);
 
+    private static String url = "jdbc:oracle:thin:@localhost:1521:XE";
+    private static String user = "PIZZADB";
+    private static String password = "PIZZADB";
+
+
     public Connection getConnection(){
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
         } catch (ClassNotFoundException e) {
-            log.error("Oracle JDBC Driver not found");
-            e.printStackTrace();
+            log.fatal("Oracle JDBC Driver not found", e);
         }
 
         Connection connection = null;
@@ -29,7 +33,7 @@ public class JDBC {
             ORA-12705: Cannot access NLS data files or invalid environment specified
              */
             Locale.setDefault(new Locale("EN","US"));
-            connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "PIZZADB", "PIZZADB");
+            connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             log.error("Unable to connect", e);
         }
@@ -42,21 +46,21 @@ public class JDBC {
         return connection;
     }
 
-    public void closeConnection(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                log.error("An error occurred while closing the connection", e);
-            }
-        }
-    }
-
 
     public Long insert(TableRecord record) {
-        Table table = record.getClass().getDeclaredAnnotation(Table.class);
+        Long result = -1L;
 
-        Connection con = getConnection();
+        try (Connection connection = getConnection()) {
+            result = insert(record, connection);
+        } catch (SQLException e) {
+            log.error("Inserting failed", e);
+        }
+
+        return result;
+    }
+
+    public Long insert(TableRecord record, Connection con) {
+        Table table = record.getClass().getDeclaredAnnotation(Table.class);
 
         String sql = "INSERT INTO " + table.name() + " VALUES (null" + new String(new char[table.columns()-1]).replace("\0", ", ?") + ")";
 
@@ -78,29 +82,39 @@ public class JDBC {
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 log.debug("Inserted successfully");
-            }
 
-            // Получение id записи
-            try ( ResultSet generatedKeys = ps.getGeneratedKeys() ) {
-                if (generatedKeys != null && generatedKeys.next()) {
-                    return generatedKeys.getLong(1);
-                } else {
-                    log.error("Unable to return id");
+                // Получение id записи
+                try ( ResultSet generatedKeys = ps.getGeneratedKeys() ) {
+                    if (generatedKeys != null && generatedKeys.next()) {
+                        return generatedKeys.getLong(1);
+                    } else {
+                        log.error("Unable to return id");
+                    }
+                } catch (SQLException e) {
+                    log.error("Unable to return id", e);
                 }
-            } catch (SQLException e) {
-                log.error("Unable to return id", e);
             }
         } catch (SQLException e) {
             log.error("Inserting failed", e);
-        } finally {
-            closeConnection(con);
         }
 
         return -1L;
     }
 
+
     public TableRecord select(TableRecord record) {
-        Connection con = getConnection();
+        TableRecord result = null;
+
+        try (Connection connection = getConnection()) {
+            result = select(record, connection);
+        } catch (SQLException e) {
+            log.error("Selecting failed", e);
+        }
+
+        return result;
+    }
+
+    public TableRecord select(TableRecord record, Connection con) {
         Table table = record.getClass().getDeclaredAnnotation(Table.class);
 
         StringBuilder sql = new StringBuilder("SELECT * FROM ")
@@ -132,7 +146,7 @@ public class JDBC {
         try ( PreparedStatement ps = con.prepareStatement(sql.toString());
               ResultSet rs = ps.executeQuery() ) {
             TableRecord result = record.getClass().newInstance();
-            if (!rs.next()) {
+            if (rs == null || !rs.next()) {
                 log.error("Unable to find a record");
                 return null;
             }
@@ -168,15 +182,25 @@ public class JDBC {
             log.error("Selecting failed: illegal access", e);
         } catch (InstantiationException e) {
             e.printStackTrace();
-        } finally {
-            closeConnection(con);
         }
 
         return null;
     }
 
+
     public boolean update(TableRecord record) {
-        Connection con = getConnection();
+        boolean result = false;
+
+        try (Connection connection = getConnection()) {
+            result = update(record, connection);
+        } catch (SQLException e) {
+            log.error("Updating failed", e);
+        }
+
+        return result;
+    }
+
+    public boolean update(TableRecord record, Connection con) {
         Table table = record.getClass().getDeclaredAnnotation(Table.class);
 
         StringBuilder sql = new StringBuilder("UPDATE ")
@@ -251,14 +275,25 @@ public class JDBC {
             log.error("Updating failed", e);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-        } finally {
-            closeConnection(con);
         }
+
         return false;
     }
 
+
     public boolean delete(TableRecord record) {
-        Connection con = getConnection();
+        boolean result = false;
+
+        try (Connection connection = getConnection()) {
+            result = delete(record, connection);
+        } catch (SQLException e) {
+            log.error("Deleting failed", e);
+        }
+
+        return result;
+    }
+
+    public boolean delete(TableRecord record, Connection con) {
         Table table = record.getClass().getDeclaredAnnotation(Table.class);
 
         StringBuilder sql = new StringBuilder("DELETE FROM ")
@@ -298,9 +333,7 @@ public class JDBC {
         catch (SQLException e) {
             log.error("Deleting failed", e);
         }
-        finally {
-            closeConnection(con);
-        }
+
         return false;
     }
 }

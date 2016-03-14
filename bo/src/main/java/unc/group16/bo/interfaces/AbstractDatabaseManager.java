@@ -16,50 +16,12 @@ public abstract class AbstractDatabaseManager {
         jdbc = new JDBC();
     }
 
-    protected void closeConnection(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                log.error("An error occurred while closing the connection", e);
-            }
-        }
-    }
 
-    protected JDBC getJDBC() {
+    public JDBC getJDBC() {
         return jdbc;
     }
 
-    protected boolean delete(String tableName, String keyColumn, Long id) {
-        Connection conn = getJDBC().getConnection();
-
-        String sql = "DELETE FROM " + tableName + " WHERE " + keyColumn + " = ?";
-        try{
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setLong(1, id);
-
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                log.debug("Deleting successful");
-                return true;
-            } else {
-                log.error("Unable to find a record with id " + id);
-            }
-        }
-        catch (SQLException e) {
-            log.error("Deleting failed", e);
-        }
-        finally {
-            closeConnection(conn);
-        }
-        return false;
-    }
-
-    public JDBC getJdbc() {
-        return jdbc;
-    }
-
-    public void setJdbc(JDBC jdbc) {
+    public void setJDBC(JDBC jdbc) {
         this.jdbc = jdbc;
     }
 }
