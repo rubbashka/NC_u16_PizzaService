@@ -1,66 +1,78 @@
 package unc.group16.data;
 
-import unc.group16.interfaces.XmlManager;
+import unc.group16.annotations.Column;
+import unc.group16.annotations.Table;
+import unc.group16.interfaces.TableRecord;
 
 import java.math.BigDecimal;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 
-@XmlRootElement
-public class Sauce implements XmlManager {
+@Table(name = "SAUCES", columns = 4)
+public class Sauce implements TableRecord {
+    @Column(id = 1, name = "SC_ID", isKey = true)
     private Long id;
+
+    @Column(id = 2, name = "PRICE")
     private BigDecimal price;
-    private String name;
-    private String comments;
+
+    @Column(id = 3, name = "TITLE")
+    private String title;
+
+    @Column(id = 4, name = "DESCRIPTION")
+    private String description;
 
     public Sauce() {}
 
-    public Sauce(Long id, BigDecimal price, String name, String comments) {
+    public Sauce(Long id, BigDecimal price, String title, String description) {
         this.id = id;
         this.price = price;
-        this.name = name;
-        this.comments = comments;
+        this.title = title;
+        this.description = description;
     }
 
     public Long getId() {
         return id;
     }
 
-    @XmlElement
-    public void setId(Long id) {
+    public Sauce setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    @XmlElement
-    public void setPrice(BigDecimal price) {
+    public Sauce setPrice(BigDecimal price) {
         this.price = price;
+        return this;
     }
 
     public String getName() {
-        return name;
+        return title;
     }
 
-    @XmlElement
-    public void setName(String name) {
-        this.name = name;
+    public Sauce setName(String title) {
+        this.title = title;
+        return this;
     }
 
     public String getComments() {
-        return comments;
+        return description;
     }
 
-    @XmlElement
-    public void setComments(String comments) {
-        this.comments = comments;
+    public Sauce setComments(String description) {
+        this.description = description;
+        return this;
     }
 
     @Override
     public Object clone() {
-        return new Sauce(id, price, name, comments);
+        Sauce result = null;
+        try {
+            result = (Sauce) super.clone();
+        } catch (CloneNotSupportedException ignored) {
+        }
+        return result;
     }
 }

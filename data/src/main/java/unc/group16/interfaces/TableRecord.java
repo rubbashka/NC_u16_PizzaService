@@ -1,4 +1,4 @@
 package unc.group16.interfaces;
 
-public interface TableRecord {
+public interface TableRecord extends Cloneable {
 }

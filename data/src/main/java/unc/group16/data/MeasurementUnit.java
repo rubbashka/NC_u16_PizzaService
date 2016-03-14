@@ -1,41 +1,50 @@
 package unc.group16.data;
 
-import unc.group16.interfaces.XmlManager;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import unc.group16.annotations.Column;
+import unc.group16.annotations.Table;
+import unc.group16.interfaces.TableRecord;
 
-@XmlRootElement
-public class MeasurementUnit implements XmlManager {
+
+@Table(name = "MEASUREMENT_UNITS", columns = 2)
+public class MeasurementUnit implements TableRecord {
+    @Column(id = 1, name = "MSRU_ID", isKey = true)
     private Long id;
-    private String name;
+
+    @Column(id = 2, name = "TITLE")
+    private String title;
 
     public MeasurementUnit() {}
 
-    public MeasurementUnit(Long id, String name) {
+    public MeasurementUnit(Long id, String title) {
         this.id = id;
-        this.name = name;
+        this.title = title;
     }
 
     public Long getId() {
         return id;
     }
 
-    @XmlElement
-    public void setId(Long id) {
+    public MeasurementUnit setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
-        return name;
+        return title;
     }
 
-    @XmlElement
-    public void setName(String name) {
-        this.name = name;
+    public MeasurementUnit setName(String title) {
+        this.title = title;
+        return this;
     }
 
     @Override
     public Object clone() {
-        return new MeasurementUnit(id, name);
+        MeasurementUnit result = null;
+        try {
+            result = (MeasurementUnit) super.clone();
+        } catch (CloneNotSupportedException ignored) {
+        }
+        return result;
     }
 }

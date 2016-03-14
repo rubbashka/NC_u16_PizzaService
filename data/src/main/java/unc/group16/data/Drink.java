@@ -1,18 +1,14 @@
 package unc.group16.data;
 
+import unc.group16.annotations.Column;
+import unc.group16.annotations.Table;
+import unc.group16.interfaces.TableRecord;
+
 import java.math.BigDecimal;
 
 
-import unc.group16.annotations.*;
-import unc.group16.interfaces.TableRecord;
-import unc.group16.interfaces.XmlManager;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
 @Table(name = "DRINKS", columns = 5)
-public class Drink implements TableRecord, XmlManager {
+public class Drink implements TableRecord {
     @Column(id = 1, name = "DRNK_ID", isKey = true)
     private Long id;
 
@@ -22,29 +18,26 @@ public class Drink implements TableRecord, XmlManager {
     @Column(id = 3, name = "PRICE")
     private BigDecimal price;
 
-    @Column(id = 4, name = "NAME")
-    private String name;
+    @Column(id = 4, name = "TITLE")
+    private String title;
 
-    @Column(id = 5, name = "COMMENTS")
-    private String comments;
-
-    private String test;
+    @Column(id = 5, name = "DESCRIPTION")
+    private String description;
 
     public Drink() {}
 
-    public Drink(Long id, Integer volume, BigDecimal price, String name, String comments) {
+    public Drink(Long id, Integer volume, BigDecimal price, String title, String description) {
         this.id = id;
         this.volume = volume;
         this.price = price;
-        this.name = name;
-        this.comments = comments;
+        this.title = title;
+        this.description = description;
     }
 
     public Long getId() {
         return id;
     }
 
-    @XmlElement
     public Drink setId(Long id) {
         this.id = id;
         return this;
@@ -54,7 +47,6 @@ public class Drink implements TableRecord, XmlManager {
         return volume;
     }
 
-    @XmlElement
     public Drink setVolume(Integer volume) {
         this.volume = volume;
         return this;
@@ -64,34 +56,36 @@ public class Drink implements TableRecord, XmlManager {
         return price;
     }
 
-    @XmlElement
     public Drink setPrice(BigDecimal price) {
         this.price = price;
         return this;
     }
 
     public String getName() {
-        return name;
+        return title;
     }
 
-    @XmlElement
-    public Drink setName(String name) {
-        this.name = name;
+    public Drink setName(String title) {
+        this.title = title;
         return this;
     }
 
     public String getComments() {
-        return comments;
+        return description;
     }
 
-    @XmlElement
-    public Drink setComments(String comments) {
-        this.comments = comments;
+    public Drink setComments(String description) {
+        this.description = description;
         return this;
     }
 
     @Override
     public Object clone() {
-        return new Drink(id, volume, price, name, comments);
+        Drink result = null;
+        try {
+            result = (Drink) super.clone();
+        } catch (CloneNotSupportedException ignored) {
+        }
+        return result;
     }
 }
