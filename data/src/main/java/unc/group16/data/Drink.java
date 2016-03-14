@@ -2,11 +2,12 @@ package unc.group16.data;
 
 import java.math.BigDecimal;
 
-import com.sun.xml.internal.txw2.annotation.XmlElement;
+
 import unc.group16.annotations.*;
 import unc.group16.interfaces.TableRecord;
 import unc.group16.interfaces.XmlManager;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
