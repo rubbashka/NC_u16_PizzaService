@@ -1,10 +1,15 @@
 package unc.group16.data;
 
+import unc.group16.interfaces.XmlManager;
+
 import java.util.Calendar;
 import java.util.Date;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
-public class Order {
+@XmlRootElement
+public class Order implements XmlManager {
     private Long id;
     private Long clientId;
     private Date orderDate;
@@ -25,6 +30,7 @@ public class Order {
         return id;
     }
 
+    @XmlElement
     public void setId(Long id) {
         this.id = id;
     }
@@ -33,6 +39,7 @@ public class Order {
         return clientId;
     }
 
+    @XmlElement
     public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
@@ -41,6 +48,7 @@ public class Order {
         return orderDate;
     }
 
+    @XmlElement
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
@@ -49,6 +57,7 @@ public class Order {
         return deliveryDate;
     }
 
+    @XmlElement
     public void setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
@@ -57,6 +66,7 @@ public class Order {
         return comments;
     }
 
+    @XmlElement
     public void setComments(String comments) {
         this.comments = comments;
     }

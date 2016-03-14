@@ -1,9 +1,13 @@
 package unc.group16.data;
 
+import unc.group16.interfaces.XmlManager;
+
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-
-public class Pizza {
+@XmlRootElement
+public class Pizza implements XmlManager {
     private Long id;
     private String name;
     private String type;
@@ -26,6 +30,7 @@ public class Pizza {
         return id;
     }
 
+    @XmlElement
     public void setId(Long id) {
         this.id = id;
     }
@@ -34,6 +39,7 @@ public class Pizza {
         return name;
     }
 
+    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
@@ -42,6 +48,7 @@ public class Pizza {
         return type;
     }
 
+    @XmlElement
     public void setType(String type) {
         this.type = type;
     }
@@ -50,6 +57,7 @@ public class Pizza {
         return weight;
     }
 
+    @XmlElement
     public void setWeight(Integer weight) {
         this.weight = weight;
     }
@@ -58,6 +66,7 @@ public class Pizza {
         return price;
     }
 
+    @XmlElement
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -66,6 +75,7 @@ public class Pizza {
         return comments;
     }
 
+    @XmlElement
     public void setComments(String comments) {
         this.comments = comments;
     }

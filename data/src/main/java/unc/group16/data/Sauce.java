@@ -1,9 +1,14 @@
 package unc.group16.data;
 
+import unc.group16.interfaces.XmlManager;
+
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
-public class Sauce {
+@XmlRootElement
+public class Sauce implements XmlManager {
     private Long id;
     private BigDecimal price;
     private String name;
@@ -22,6 +27,7 @@ public class Sauce {
         return id;
     }
 
+    @XmlElement
     public void setId(Long id) {
         this.id = id;
     }
@@ -30,6 +36,7 @@ public class Sauce {
         return price;
     }
 
+    @XmlElement
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -38,6 +45,7 @@ public class Sauce {
         return name;
     }
 
+    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
@@ -46,6 +54,7 @@ public class Sauce {
         return comments;
     }
 
+    @XmlElement
     public void setComments(String comments) {
         this.comments = comments;
     }

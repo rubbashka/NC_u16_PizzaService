@@ -1,6 +1,12 @@
 package unc.group16.data;
 
-public class Client {
+import javax.xml.bind.annotation.XmlElement;
+import unc.group16.interfaces.XmlManager;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class Client implements XmlManager {
     private Long id;
     private String name;
     private String address;
@@ -25,6 +31,7 @@ public class Client {
         return id;
     }
 
+    @XmlElement
     public void setId(Long id) {
         this.id = id;
     }
@@ -33,6 +40,7 @@ public class Client {
         return name;
     }
 
+    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
@@ -41,6 +49,7 @@ public class Client {
         return address;
     }
 
+    @XmlElement
     public void setAddress(String address) {
         this.address = address;
     }
@@ -48,7 +57,8 @@ public class Client {
     public String getHome() {
         return home;
     }
-    
+
+    @XmlElement
     public void setHome(String home) {
         this.home = home;
     }
@@ -57,6 +67,7 @@ public class Client {
         return apartment;
     }
 
+    @XmlElement
     public void setApartment(String apartment) {
         this.apartment = apartment;
     }
@@ -65,6 +76,7 @@ public class Client {
         return phone;
     }
 
+    @XmlElement
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -73,6 +85,7 @@ public class Client {
         return comments;
     }
 
+    @XmlElement
     public void setComments(String comments) {
         this.comments = comments;
     }

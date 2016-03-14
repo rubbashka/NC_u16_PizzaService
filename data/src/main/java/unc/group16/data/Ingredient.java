@@ -1,6 +1,12 @@
 package unc.group16.data;
 
-public class Ingredient {
+import unc.group16.interfaces.XmlManager;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class Ingredient implements XmlManager {
     private Long id;
     private String name;
     private String comments;
@@ -17,6 +23,7 @@ public class Ingredient {
         return id;
     }
 
+    @XmlElement
     public void setId(Long id) {
         this.id = id;
     }
@@ -25,6 +32,7 @@ public class Ingredient {
         return name;
     }
 
+    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
@@ -33,6 +41,7 @@ public class Ingredient {
         return comments;
     }
 
+    @XmlElement
     public void setComments(String comments) {
         this.comments = comments;
     }

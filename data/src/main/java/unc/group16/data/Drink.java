@@ -1,12 +1,17 @@
 package unc.group16.data;
 
 import java.math.BigDecimal;
+
+import com.sun.xml.internal.txw2.annotation.XmlElement;
 import unc.group16.annotations.*;
 import unc.group16.interfaces.TableRecord;
+import unc.group16.interfaces.XmlManager;
 
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 @Table(name = "DRINKS", columns = 5)
-public class Drink implements TableRecord {
+public class Drink implements TableRecord, XmlManager {
     @Column(id = 1, name = "DRNK_ID", isKey = true)
     private Long id;
 
@@ -22,6 +27,8 @@ public class Drink implements TableRecord {
     @Column(id = 5, name = "COMMENTS")
     private String comments;
 
+    private String test;
+
     public Drink() {}
 
     public Drink(Long id, Integer volume, BigDecimal price, String name, String comments) {
@@ -36,6 +43,7 @@ public class Drink implements TableRecord {
         return id;
     }
 
+    @XmlElement
     public Drink setId(Long id) {
         this.id = id;
         return this;
@@ -45,6 +53,7 @@ public class Drink implements TableRecord {
         return volume;
     }
 
+    @XmlElement
     public Drink setVolume(Integer volume) {
         this.volume = volume;
         return this;
@@ -54,6 +63,7 @@ public class Drink implements TableRecord {
         return price;
     }
 
+    @XmlElement
     public Drink setPrice(BigDecimal price) {
         this.price = price;
         return this;
@@ -63,6 +73,7 @@ public class Drink implements TableRecord {
         return name;
     }
 
+    @XmlElement
     public Drink setName(String name) {
         this.name = name;
         return this;
@@ -72,6 +83,7 @@ public class Drink implements TableRecord {
         return comments;
     }
 
+    @XmlElement
     public Drink setComments(String comments) {
         this.comments = comments;
         return this;

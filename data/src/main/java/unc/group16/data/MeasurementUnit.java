@@ -1,6 +1,11 @@
 package unc.group16.data;
 
-public class MeasurementUnit {
+import unc.group16.interfaces.XmlManager;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class MeasurementUnit implements XmlManager {
     private Long id;
     private String name;
 
@@ -15,6 +20,7 @@ public class MeasurementUnit {
         return id;
     }
 
+    @XmlElement
     public void setId(Long id) {
         this.id = id;
     }
@@ -23,6 +29,7 @@ public class MeasurementUnit {
         return name;
     }
 
+    @XmlElement
     public void setName(String name) {
         this.name = name;
     }
