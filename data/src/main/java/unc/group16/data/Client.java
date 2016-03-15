@@ -3,10 +3,14 @@ package unc.group16.data;
 import unc.group16.annotations.Column;
 import unc.group16.annotations.Table;
 import unc.group16.interfaces.TableRecord;
+import unc.group16.interfaces.XmlManager;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
 
+@XmlRootElement
 @Table(name = "CLIENTS", columns = 4)
-public class Client implements TableRecord {
+public class Client implements TableRecord, XmlManager {
     @Column(id = 1, name = "CLNT_ID", isKey = true)
     private Long id;
 
@@ -37,6 +41,7 @@ public class Client implements TableRecord {
         return id;
     }
 
+    @XmlElement
     public Client setId(Long id) {
         this.id = id;
         return this;
@@ -46,6 +51,7 @@ public class Client implements TableRecord {
         return name;
     }
 
+    @XmlElement
     public Client setName(String name) {
         this.name = name;
         return this;
@@ -55,6 +61,7 @@ public class Client implements TableRecord {
         return address;
     }
 
+    @XmlElement
     public Client setAddress(String address) {
         this.address = address;
         return this;
@@ -64,6 +71,7 @@ public class Client implements TableRecord {
         return phone;
     }
 
+    @XmlElement
     public Client setPhone(String phone) {
         this.phone = phone;
         return this;
