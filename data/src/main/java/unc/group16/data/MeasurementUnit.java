@@ -3,10 +3,15 @@ package unc.group16.data;
 import unc.group16.annotations.Column;
 import unc.group16.annotations.Table;
 import unc.group16.interfaces.TableRecord;
+import unc.group16.interfaces.XmlManager;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
 
 
+@XmlRootElement
 @Table(name = "MEASUREMENT_UNITS", columns = 2)
-public class MeasurementUnit implements TableRecord {
+public class MeasurementUnit implements TableRecord, XmlManager {
     @Column(id = 1, name = "MSRU_ID", isKey = true)
     private Long id;
 
@@ -24,6 +29,7 @@ public class MeasurementUnit implements TableRecord {
         return id;
     }
 
+    @XmlElement
     public MeasurementUnit setId(Long id) {
         this.id = id;
         return this;
@@ -33,6 +39,7 @@ public class MeasurementUnit implements TableRecord {
         return title;
     }
 
+    @XmlElement
     public MeasurementUnit setName(String title) {
         this.title = title;
         return this;

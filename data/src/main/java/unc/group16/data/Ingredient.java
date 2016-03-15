@@ -3,10 +3,15 @@ package unc.group16.data;
 import unc.group16.annotations.Column;
 import unc.group16.annotations.Table;
 import unc.group16.interfaces.TableRecord;
+import unc.group16.interfaces.XmlManager;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
 
 
+@XmlRootElement
 @Table(name = "INGREDIENTS", columns = 3)
-public class Ingredient implements TableRecord {
+public class Ingredient implements TableRecord, XmlManager {
     @Column(id = 1, name = "INGRD_ID", isKey = true)
     private Long id;
 
@@ -28,6 +33,7 @@ public class Ingredient implements TableRecord {
         return id;
     }
 
+    @XmlElement
     public Ingredient setId(Long id) {
         this.id = id;
         return this;
@@ -37,6 +43,7 @@ public class Ingredient implements TableRecord {
         return title;
     }
 
+    @XmlElement
     public Ingredient setName(String title) {
         this.title = title;
         return this;
@@ -46,6 +53,7 @@ public class Ingredient implements TableRecord {
         return description;
     }
 
+    @XmlElement
     public Ingredient setComments(String description) {
         this.description = description;
         return this;

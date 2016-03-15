@@ -3,12 +3,15 @@ package unc.group16.data;
 import unc.group16.annotations.Column;
 import unc.group16.annotations.Table;
 import unc.group16.interfaces.TableRecord;
+import unc.group16.interfaces.XmlManager;
 
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
 
-
+@XmlRootElement
 @Table(name = "SAUCES", columns = 4)
-public class Sauce implements TableRecord {
+public class Sauce implements TableRecord, XmlManager {
     @Column(id = 1, name = "SC_ID", isKey = true)
     private Long id;
 
@@ -34,6 +37,7 @@ public class Sauce implements TableRecord {
         return id;
     }
 
+    @XmlElement
     public Sauce setId(Long id) {
         this.id = id;
         return this;
@@ -43,6 +47,7 @@ public class Sauce implements TableRecord {
         return price;
     }
 
+    @XmlElement
     public Sauce setPrice(BigDecimal price) {
         this.price = price;
         return this;
@@ -52,6 +57,7 @@ public class Sauce implements TableRecord {
         return title;
     }
 
+    @XmlElement
     public Sauce setName(String title) {
         this.title = title;
         return this;
@@ -61,6 +67,7 @@ public class Sauce implements TableRecord {
         return description;
     }
 
+    @XmlElement
     public Sauce setComments(String description) {
         this.description = description;
         return this;

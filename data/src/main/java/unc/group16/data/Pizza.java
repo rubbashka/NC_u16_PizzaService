@@ -3,12 +3,15 @@ package unc.group16.data;
 import unc.group16.annotations.Column;
 import unc.group16.annotations.Table;
 import unc.group16.interfaces.TableRecord;
+import unc.group16.interfaces.XmlManager;
 
 import java.math.BigDecimal;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
 
-
+@XmlRootElement
 @Table(name = "PIZZAS", columns = 6)
-public class Pizza implements TableRecord {
+public class Pizza implements TableRecord, XmlManager {
     @Column(id = 1, name = "PZ_ID", isKey = true)
     private Long id;
 
@@ -42,6 +45,7 @@ public class Pizza implements TableRecord {
         return id;
     }
 
+    @XmlElement
     public Pizza setId(Long id) {
         this.id = id;
         return this;
@@ -51,6 +55,7 @@ public class Pizza implements TableRecord {
         return title;
     }
 
+    @XmlElement
     public Pizza setName(String title) {
         this.title = title;
         return this;
@@ -60,6 +65,7 @@ public class Pizza implements TableRecord {
         return type;
     }
 
+    @XmlElement
     public Pizza setType(String type) {
         this.type = type;
         return this;
@@ -69,6 +75,7 @@ public class Pizza implements TableRecord {
         return weight;
     }
 
+    @XmlElement
     public Pizza setWeight(Integer weight) {
         this.weight = weight;
         return this;
@@ -78,6 +85,7 @@ public class Pizza implements TableRecord {
         return price;
     }
 
+    @XmlElement
     public Pizza setPrice(BigDecimal price) {
         this.price = price;
         return this;
@@ -87,6 +95,7 @@ public class Pizza implements TableRecord {
         return description;
     }
 
+    @XmlElement
     public Pizza setComments(String description) {
         this.description = description;
         return this;

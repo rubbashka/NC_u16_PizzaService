@@ -3,12 +3,15 @@ package unc.group16.data;
 import unc.group16.annotations.Column;
 import unc.group16.annotations.Table;
 import unc.group16.interfaces.TableRecord;
+import unc.group16.interfaces.XmlManager;
 
 import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlElement;
 
-
+@XmlRootElement
 @Table(name = "ORDERS", columns = 5)
-public class Order implements TableRecord {
+public class Order implements TableRecord, XmlManager {
     @Column(id = 1, name = "ORD_ID", isKey = true)
     private Long id;
 
@@ -38,6 +41,7 @@ public class Order implements TableRecord {
         return id;
     }
 
+    @XmlElement
     public Order setId(Long id) {
         this.id = id;
         return this;
@@ -47,6 +51,7 @@ public class Order implements TableRecord {
         return clientId;
     }
 
+    @XmlElement
     public Order setClientId(Long clientId) {
         this.clientId = clientId;
         return this;
@@ -56,6 +61,7 @@ public class Order implements TableRecord {
         return orderDate;
     }
 
+    @XmlElement
     public Order setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
         return this;
@@ -65,6 +71,7 @@ public class Order implements TableRecord {
         return deliveryDate;
     }
 
+    @XmlElement
     public Order setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
         return this;
@@ -74,6 +81,7 @@ public class Order implements TableRecord {
         return description;
     }
 
+    @XmlElement
     public Order setComments(String description) {
         this.description = description;
         return this;
