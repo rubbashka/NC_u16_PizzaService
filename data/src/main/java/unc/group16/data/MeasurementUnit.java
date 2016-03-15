@@ -15,10 +15,15 @@ public class MeasurementUnit implements TableRecord {
 
     public MeasurementUnit() {}
 
-    public MeasurementUnit(Long id, String title) {
-        this.id = id;
+    public MeasurementUnit(String title) {
         this.title = title;
     }
+
+    public MeasurementUnit(Long id, String title) {
+        this(title);
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;
@@ -29,14 +34,15 @@ public class MeasurementUnit implements TableRecord {
         return this;
     }
 
-    public String getName() {
+    public String getTitle() {
         return title;
     }
 
-    public MeasurementUnit setName(String title) {
+    public MeasurementUnit setTitle(String title) {
         this.title = title;
         return this;
     }
+
 
     @Override
     public Object clone() {

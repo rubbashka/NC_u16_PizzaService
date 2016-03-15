@@ -23,12 +23,17 @@ public class Sauce implements TableRecord {
 
     public Sauce() {}
 
-    public Sauce(Long id, BigDecimal price, String title, String description) {
-        this.id = id;
+    public Sauce(BigDecimal price, String title, String description) {
         this.price = price;
         this.title = title;
         this.description = description;
     }
+
+    public Sauce(Long id, BigDecimal price, String title, String description) {
+        this(price, title, description);
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;
@@ -48,23 +53,24 @@ public class Sauce implements TableRecord {
         return this;
     }
 
-    public String getName() {
+    public String getTitle() {
         return title;
     }
 
-    public Sauce setName(String title) {
+    public Sauce setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public String getComments() {
+    public String getDescription() {
         return description;
     }
 
-    public Sauce setComments(String description) {
+    public Sauce setDescription(String description) {
         this.description = description;
         return this;
     }
+
 
     @Override
     public Object clone() {

@@ -1,8 +1,6 @@
 package unc.group16.bo.managers.oracle;
 
 import org.junit.*;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import unc.group16.bo.JDBC;
 import unc.group16.data.Drink;
 
@@ -16,7 +14,7 @@ import static org.mockito.Mockito.*;
 
 public class OracleDrinksManagerTest {
     private OracleDrinksManager manager;
-    private Connection spyConnection;
+    private Connection mockedConnection;
 
     @Before
     public void setUp() throws Exception {
@@ -24,76 +22,86 @@ public class OracleDrinksManagerTest {
         JDBC spyJdbc = spy(new JDBC());
         manager.setJDBC(spyJdbc);
 
-        spyConnection = spy(spyJdbc.getConnection());
-        doReturn(spyConnection).when(spyJdbc).getConnection();
+        mockedConnection = mock(Connection.class);//spy(spyJdbc.getConnection());
+        doReturn(mockedConnection).when(spyJdbc).getConnection();
     }
 
     @After
     public void tearDown() throws Exception {
-        spyConnection.close();
+        mockedConnection.close();
     }
 
     @Test
     public void testCreate() throws Exception {
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            PreparedStatement spyPS = spy(new JDBC().getConnection().prepareStatement((String) args[0], (int[])args[1]));
+            Connection connection = new JDBC().getConnection();
+            PreparedStatement spyPS = spy(connection.prepareStatement((String) args[0], (int[])args[1]));
+            connection.close();
+
             assertEquals("INSERT INTO DRINKS VALUES (null, ?, ?, ?, ?)", args[0]);
 
             doReturn(0).when(spyPS).executeUpdate();
             return spyPS;
-        }).when(spyConnection).prepareStatement(anyString(), any(int[].class));
+        }).when(mockedConnection).prepareStatement(anyString(), any(int[].class));
 
-
-        Drink drink = new Drink(null, 2, BigDecimal.TEN, "Drink", "");
+        final Drink drink = new Drink(null, 2, BigDecimal.TEN, "Drink", "");
         manager.create(drink);
     }
 
     @Test
     public void testRead() throws Exception {
+        final Long ID = 42L;
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            PreparedStatement spyPS = spy(new JDBC().getConnection().prepareStatement((String) args[0]));
+            Connection connection = new JDBC().getConnection();
+            PreparedStatement spyPS = spy(connection.prepareStatement((String) args[0]));
+            connection.close();
 
-            assertEquals("SELECT * FROM DRINKS WHERE DRNK_ID=42", args[0]);
+            assertEquals("SELECT * FROM DRINKS WHERE DRNK_ID=" + ID, args[0]);
 
             return spyPS;
-        }).when(spyConnection).prepareStatement(anyString());
+        }).when(mockedConnection).prepareStatement(anyString());
 
-        manager.read(42L);
+        manager.read(ID);
     }
 
     @Test
     public void testUpdate() throws Exception {
+        final long ID = 42L;
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            PreparedStatement spyPS = spy(new JDBC().getConnection().prepareStatement((String) args[0]));
+            Connection connection = new JDBC().getConnection();
+            PreparedStatement spyPS = spy(connection.prepareStatement((String) args[0]));
+            connection.close();
 
-            assertEquals("UPDATE DRINKS SET VOLUME=?, PRICE=?, TITLE=?, DESCRIPTION=? WHERE DRNK_ID=42", args[0]);
+            assertEquals("UPDATE DRINKS SET VOLUME=?, PRICE=?, TITLE=?, DESCRIPTION=? WHERE DRNK_ID=" + ID, args[0]);
 
             doReturn(1).when(spyPS).executeUpdate();
             return spyPS;
-        }).when(spyConnection).prepareStatement(anyString());
+        }).when(mockedConnection).prepareStatement(anyString());
 
 
-        Drink drink = new Drink(42L, 2, BigDecimal.TEN, "Drink", "");
+        final Drink drink = new Drink(ID, 2, BigDecimal.TEN, "Drink", "");
         manager.update(drink);
     }
 
     @Test
     public void testDelete() throws Exception {
+        final long ID = 42L;
         doAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            PreparedStatement spyPS = spy(new JDBC().getConnection().prepareStatement((String) args[0]));
+            Connection connection = new JDBC().getConnection();
+            PreparedStatement spyPS = spy(connection.prepareStatement((String) args[0]));
+            connection.close();
 
-            assertEquals("DELETE FROM DRINKS WHERE DRNK_ID=42", args[0]);
+            assertEquals("DELETE FROM DRINKS WHERE DRNK_ID=" + ID, args[0]);
 
             doReturn(1).when(spyPS).executeUpdate();
             return spyPS;
-        }).when(spyConnection).prepareStatement(anyString());
+        }).when(mockedConnection).prepareStatement(anyString());
 
-
-        Drink drink = new Drink(42L, 2, BigDecimal.TEN, "Drink", "");
-        manager.delete(42L);
+        final Drink drink = new Drink(ID, 2, BigDecimal.TEN, "Drink", "");
+        manager.delete(ID);
     }
 }

@@ -21,12 +21,17 @@ public class Client implements TableRecord {
 
     public Client() {}
     
-    public Client(Long id, String name, String address, String phone) {
-        this.id = id;
+    public Client(String name, String address, String phone) {
         this.name = name;
         this.address = address;
         this.phone = phone;
     }
+
+    public Client(Long id, String name, String address, String phone) {
+        this(name, address, phone);
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;
@@ -63,6 +68,7 @@ public class Client implements TableRecord {
         this.phone = phone;
         return this;
     }
+
 
     @Override
     public Object clone() {

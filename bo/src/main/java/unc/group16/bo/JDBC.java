@@ -7,7 +7,10 @@ import unc.group16.interfaces.TableRecord;
 
 import java.lang.reflect.Field;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
+
 
 @SuppressWarnings("Duplicates")
 public class JDBC {
@@ -48,7 +51,7 @@ public class JDBC {
 
 
     public Long insert(TableRecord record) {
-        Long result = -1L;
+        Long result = null;
 
         try (Connection connection = getConnection()) {
             result = insert(record, connection);
@@ -60,23 +63,26 @@ public class JDBC {
     }
 
     public Long insert(TableRecord record, Connection con) {
-        Table table = record.getClass().getDeclaredAnnotation(Table.class);
+        Table tableInfo = record.getClass().getDeclaredAnnotation(Table.class);
 
-        String sql = "INSERT INTO " + table.name() + " VALUES (null" + new String(new char[table.columns()-1]).replace("\0", ", ?") + ")";
+        String sql = "INSERT INTO " + tableInfo.name() + " VALUES (null" + new String(new char[tableInfo.columns()-1]).replace("\0", ", ?") + ")";
 
         try ( PreparedStatement ps = con.prepareStatement(sql, new int[] {1}) ) {
-
             Field[] fields = record.getClass().getDeclaredFields();
             for (Field field : fields) {
                 Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-                if (columnAnnotation == null || columnAnnotation.isKey()) {
-                    continue;
+                if (columnAnnotation != null && !columnAnnotation.isKey()) {
+                    try {
+                        field.setAccessible(true);
+                        Object data = field.get(record);
+                        if (data instanceof Date) {
+                            data = new Timestamp(((Date) data).getTime());
+                        }
+                        ps.setObject(columnAnnotation.id() - 1, data);
+                    } catch (IllegalAccessException e) {
+                        log.error("Could not get access to field " + field.getName(), e);
+                    }
                 }
-
-                try {
-                    field.setAccessible(true);
-                    ps.setObject(columnAnnotation.id() - 1, field.get(record));
-                } catch (IllegalAccessException ignored) {}
             }
 
             int rows = ps.executeUpdate();
@@ -98,7 +104,7 @@ public class JDBC {
             log.error("Inserting failed", e);
         }
 
-        return -1L;
+        return null;
     }
 
 
@@ -115,32 +121,26 @@ public class JDBC {
     }
 
     public TableRecord select(TableRecord record, Connection con) {
-        Table table = record.getClass().getDeclaredAnnotation(Table.class);
+        Table tableInfo = record.getClass().getDeclaredAnnotation(Table.class);
 
         StringBuilder sql = new StringBuilder("SELECT * FROM ")
-                .append(table.name())
-                .append(" WHERE");
+                .append(tableInfo.name())
+                .append(" WHERE ");
 
-        int keysCnt = 0;
         Field[] fields = record.getClass().getDeclaredFields();
         for (Field field : fields) {
             Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-            if (columnAnnotation == null || !columnAnnotation.isKey()) {
-                continue;
-            }
-
-            try {
-                field.setAccessible(true);
-                if (keysCnt >= 1) {
-                    sql.append(" AND");
+            if (columnAnnotation != null && columnAnnotation.isKey()) {
+                try {
+                    field.setAccessible(true);
+                    sql.append(columnAnnotation.name())
+                            .append("=")
+                            .append(field.get(record));
+                } catch (IllegalAccessException e) {
+                    log.error("Could not get access to field " + field.getName(), e);
                 }
-                sql.append(" ")
-                        .append(columnAnnotation.name())
-                        .append("=")
-                        .append(field.get(record));
-            } catch (IllegalAccessException ignored) {}
-
-            keysCnt++;
+                break;
+            }
         }
 
         try ( PreparedStatement ps = con.prepareStatement(sql.toString());
@@ -151,11 +151,76 @@ public class JDBC {
                 return null;
             }
 
-            for (int i = 1; i <= table.columns(); i++) {
+            for (Field field : fields) {
+                Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
+
+                if (columnAnnotation != null) {
+                    field.setAccessible(true);
+
+                    Object data;
+                    if (field.getType() == Long.class) {
+                        data = rs.getLong(columnAnnotation.id());
+                    } else if (field.getType() == Integer.class) {
+                        data = rs.getInt(columnAnnotation.id());
+                    } else if (field.getType() == Double.class) {
+                        data = rs.getDouble(columnAnnotation.id());
+                    } else if (field.getType() == Date.class) {
+                        data = new Date(rs.getTimestamp(columnAnnotation.id()).getTime());
+                    } else {
+                        data = rs.getObject(columnAnnotation.id());
+                    }
+                    field.set(result, data);
+                }
+            }
+
+            log.debug("Selected successfully");
+            return result;
+
+        } catch (SQLException e) {
+            log.error("Selecting failed", e);
+        } catch (IllegalAccessException e) {
+            log.error("Selecting failed: illegal access", e);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public TableRecord[] selectAll(Class<? extends TableRecord> table) {
+        TableRecord[] result = null;
+
+        try (Connection connection = getConnection()) {
+            result = selectAll(table, connection);
+        } catch (SQLException e) {
+            log.error("Selecting failed", e);
+        }
+
+        return result;
+    }
+
+    public TableRecord[] selectAll(Class<? extends TableRecord> table, Connection con) {
+        Table tableInfo = table.getDeclaredAnnotation(Table.class);
+
+        String sql = "SELECT * FROM " + tableInfo.name();
+
+        ArrayList<TableRecord> result = new ArrayList<>();
+
+        try ( PreparedStatement ps = con.prepareStatement(sql);
+              ResultSet rs = ps.executeQuery() ) {
+            if (rs == null) {
+                log.error("Unable to find records");
+                return null;
+            }
+
+            Field[] fields = table.getDeclaredFields();
+            while (rs.next()) {
+                TableRecord record = table.newInstance();
+
                 for (Field field : fields) {
                     Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
 
-                    if (columnAnnotation != null && columnAnnotation.id() == i) {
+                    if (columnAnnotation != null) {
                         field.setAccessible(true);
 
                         Object data;
@@ -165,16 +230,20 @@ public class JDBC {
                             data = rs.getInt(columnAnnotation.id());
                         } else if (field.getType() == Double.class) {
                             data = rs.getDouble(columnAnnotation.id());
+                        } else if (field.getType() == Date.class) {
+                            data = new Date(rs.getTimestamp(columnAnnotation.id()).getTime());
                         } else {
                             data = rs.getObject(columnAnnotation.id());
                         }
-                        field.set(result, data);
-                        break;
+                        field.set(record, data);
                     }
                 }
+
+                result.add(record);
             }
+
             log.debug("Selected successfully");
-            return result;
+            return result.toArray(new TableRecord[result.size()]);
 
         } catch (SQLException e) {
             log.error("Selecting failed", e);
@@ -201,16 +270,15 @@ public class JDBC {
     }
 
     public boolean update(TableRecord record, Connection con) {
-        Table table = record.getClass().getDeclaredAnnotation(Table.class);
+        Table tableInfo = record.getClass().getDeclaredAnnotation(Table.class);
 
         StringBuilder sql = new StringBuilder("UPDATE ")
-                .append(table.name())
+                .append(tableInfo.name())
                 .append(" SET");
-        StringBuilder whereStatement = new StringBuilder(" WHERE");
+        StringBuilder whereStatement = new StringBuilder(" WHERE ");
 
         Field[] fields = record.getClass().getDeclaredFields();
         int colCnt = 0;
-        int keysCnt = 0;
         for (Field field : fields) {
             Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
             if (columnAnnotation == null) {
@@ -231,24 +299,21 @@ public class JDBC {
                             .append("=?");
                     colCnt++;
                 } else {
-                    if (keysCnt >= 1) {
-                        sql.append(" AND");
+                    if (field.get(record) == null) {
+                        log.error("Key value must be not null");
+                        return false;
                     }
-                    whereStatement.append(" ")
-                            .append(columnAnnotation.name())
+                    whereStatement.append(columnAnnotation.name())
                             .append("=")
                             .append(field.get(record));
-                    keysCnt++;
                 }
 
-            } catch (IllegalAccessException ignored) {}
+            } catch (IllegalAccessException e) {
+                log.error("Could not get access to field " + field.getName(), e);
+            }
         }
         if (colCnt == 0) {
             log.error("At least one non key argument must be not null");
-            return false;
-        }
-        if (keysCnt == 0) {
-            log.error("At least one key argument must be not null");
             return false;
         }
         sql.append(whereStatement);
@@ -257,11 +322,13 @@ public class JDBC {
             int i = 0;
             for (Field field : fields) {
                 Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-                if (columnAnnotation == null || columnAnnotation.isKey() || field.get(record) == null) {
-                    continue;
+                if (columnAnnotation != null && !columnAnnotation.isKey() && field.get(record) != null) {
+                    Object data = field.get(record);
+                    if (data instanceof Date) {
+                        data = new Timestamp(((Date) data).getTime());
+                    }
+                    ps.setObject(++i, data);
                 }
-                i++;
-                ps.setObject(i, field.get(record));
             }
             int rows = ps.executeUpdate();
             if (rows > 0) {
@@ -294,31 +361,25 @@ public class JDBC {
     }
 
     public boolean delete(TableRecord record, Connection con) {
-        Table table = record.getClass().getDeclaredAnnotation(Table.class);
+        Table tableInfo = record.getClass().getDeclaredAnnotation(Table.class);
 
         StringBuilder sql = new StringBuilder("DELETE FROM ")
-                .append(table.name())
-                .append(" WHERE");
+                .append(tableInfo.name())
+                .append(" WHERE ");
         Field[] fields = record.getClass().getDeclaredFields();
-        int keysCnt = 0;
         for (Field field : fields) {
             Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-            if (columnAnnotation == null || !columnAnnotation.isKey()) {
-                continue;
-            }
-
-            try {
-                field.setAccessible(true);
-                if (keysCnt >= 1) {
-                    sql.append(" AND");
+            if (columnAnnotation != null && columnAnnotation.isKey()) {
+                try {
+                    field.setAccessible(true);
+                    sql.append(columnAnnotation.name())
+                            .append("=")
+                            .append(field.get(record));
+                } catch (IllegalAccessException e) {
+                    log.error("Could not get access to field " + field.getName(), e);
                 }
-                sql.append(" ")
-                        .append(columnAnnotation.name())
-                        .append("=")
-                        .append(field.get(record));
-            } catch (IllegalAccessException ignored) {}
-
-            keysCnt++;
+                break;
+            }
         }
 
         try (PreparedStatement ps = con.prepareStatement(sql.toString())) {

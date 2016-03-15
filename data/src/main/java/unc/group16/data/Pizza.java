@@ -29,14 +29,19 @@ public class Pizza implements TableRecord {
 
     public Pizza() {}
 
-    public Pizza(Long id, String title, String type, Integer weight, BigDecimal price, String description) {
-        this.id = id;
+    public Pizza(String title, String type, Integer weight, BigDecimal price, String description) {
         this.title = title;
         this.type = type;
         this.weight = weight;
         this.price = price;
         this.description = description;
     }
+
+    public Pizza(Long id, String title, String type, Integer weight, BigDecimal price, String description) {
+        this(title, type, weight, price, description);
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;
@@ -47,11 +52,11 @@ public class Pizza implements TableRecord {
         return this;
     }
 
-    public String getName() {
+    public String getTitle() {
         return title;
     }
 
-    public Pizza setName(String title) {
+    public Pizza setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -83,14 +88,15 @@ public class Pizza implements TableRecord {
         return this;
     }
 
-    public String getComments() {
+    public String getDescription() {
         return description;
     }
 
-    public Pizza setComments(String description) {
+    public Pizza setDescription(String description) {
         this.description = description;
         return this;
     }
+
 
     @Override
     public Object clone() {

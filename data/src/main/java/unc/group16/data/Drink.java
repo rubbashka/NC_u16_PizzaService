@@ -26,13 +26,18 @@ public class Drink implements TableRecord {
 
     public Drink() {}
 
-    public Drink(Long id, Integer volume, BigDecimal price, String title, String description) {
-        this.id = id;
+    public Drink(Integer volume, BigDecimal price, String title, String description) {
         this.volume = volume;
         this.price = price;
         this.title = title;
         this.description = description;
     }
+
+    public Drink(Long id, Integer volume, BigDecimal price, String title, String description) {
+        this(volume, price, title, description);
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;
@@ -61,20 +66,20 @@ public class Drink implements TableRecord {
         return this;
     }
 
-    public String getName() {
+    public String getTitle() {
         return title;
     }
 
-    public Drink setName(String title) {
+    public Drink setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public String getComments() {
+    public String getDescription() {
         return description;
     }
 
-    public Drink setComments(String description) {
+    public Drink setDescription(String description) {
         this.description = description;
         return this;
     }

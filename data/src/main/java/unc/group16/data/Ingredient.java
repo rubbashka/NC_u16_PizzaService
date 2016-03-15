@@ -18,11 +18,16 @@ public class Ingredient implements TableRecord {
 
     public Ingredient() {}
 
-    public Ingredient(Long id, String title, String description) {
-        this.id = id;
+    public Ingredient(String title, String description) {
         this.title = title;
         this.description = description;
     }
+
+    public Ingredient(Long id, String title, String description) {
+        this(title, description);
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;
@@ -33,23 +38,24 @@ public class Ingredient implements TableRecord {
         return this;
     }
 
-    public String getName() {
+    public String getTitle() {
         return title;
     }
 
-    public Ingredient setName(String title) {
+    public Ingredient setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public String getComments() {
+    public String getDescription() {
         return description;
     }
 
-    public Ingredient setComments(String description) {
+    public Ingredient setDescription(String description) {
         this.description = description;
         return this;
     }
+
 
     @Override
     public Object clone() {

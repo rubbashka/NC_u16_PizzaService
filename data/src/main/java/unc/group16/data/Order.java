@@ -26,13 +26,18 @@ public class Order implements TableRecord {
 
     public Order() {}
 
-    public Order(Long id, Long clientId, Date orderDate, Date deliveryDate, String description) {
-        this.id = id;
+    public Order(Long clientId, Date orderDate, Date deliveryDate, String description) {
         this.clientId = clientId;
         this.orderDate = orderDate;
         this.deliveryDate = deliveryDate;
         this.description = description;
     }
+
+    public Order(Long id, Long clientId, Date orderDate, Date deliveryDate, String description) {
+        this(clientId, orderDate, deliveryDate, description);
+        this.id = id;
+    }
+
 
     public Long getId() {
         return id;
@@ -70,14 +75,15 @@ public class Order implements TableRecord {
         return this;
     }
 
-    public String getComments() {
+    public String getDescription() {
         return description;
     }
 
-    public Order setComments(String description) {
+    public Order setDescription(String description) {
         this.description = description;
         return this;
     }
+
 
     @Override
     public Object clone() {
