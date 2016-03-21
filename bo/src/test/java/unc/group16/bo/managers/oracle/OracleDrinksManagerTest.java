@@ -22,7 +22,7 @@ public class OracleDrinksManagerTest {
         JDBC spyJdbc = spy(new JDBC());
         manager.setJDBC(spyJdbc);
 
-        mockedConnection = mock(Connection.class);//spy(spyJdbc.getConnection());
+        mockedConnection = mock(Connection.class);
         doReturn(mockedConnection).when(spyJdbc).getConnection();
     }
 

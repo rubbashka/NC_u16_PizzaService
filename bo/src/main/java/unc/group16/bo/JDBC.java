@@ -143,38 +143,18 @@ public class JDBC {
             }
         }
 
-        try ( PreparedStatement ps = con.prepareStatement(sql.toString());
-              ResultSet rs = ps.executeQuery() ) {
-            TableRecord result = record.getClass().newInstance();
-            if (rs == null || !rs.next()) {
-                log.error("Unable to find a record");
+        try ( PreparedStatement ps = con.prepareStatement(sql.toString()) ) {
+
+            TableRecord[] result = executePreparedQuery(record.getClass(), ps);
+
+            if (result.length > 0) {
+                log.debug("Selected successfully");
+                return result[0];
+            } else {
+                log.error("Unable to find record");
                 return null;
             }
 
-            for (Field field : fields) {
-                Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-
-                if (columnAnnotation != null) {
-                    field.setAccessible(true);
-
-                    Object data;
-                    if (field.getType() == Long.class) {
-                        data = rs.getLong(columnAnnotation.id());
-                    } else if (field.getType() == Integer.class) {
-                        data = rs.getInt(columnAnnotation.id());
-                    } else if (field.getType() == Double.class) {
-                        data = rs.getDouble(columnAnnotation.id());
-                    } else if (field.getType() == Date.class) {
-                        data = new Date(rs.getTimestamp(columnAnnotation.id()).getTime());
-                    } else {
-                        data = rs.getObject(columnAnnotation.id());
-                    }
-                    field.set(result, data);
-                }
-            }
-
-            log.debug("Selected successfully");
-            return result;
 
         } catch (SQLException e) {
             log.error("Selecting failed", e);
@@ -204,46 +184,10 @@ public class JDBC {
 
         String sql = "SELECT * FROM " + tableInfo.name();
 
-        ArrayList<TableRecord> result = new ArrayList<>();
-
-        try ( PreparedStatement ps = con.prepareStatement(sql);
-              ResultSet rs = ps.executeQuery() ) {
-            if (rs == null) {
-                log.error("Unable to find records");
-                return null;
-            }
-
-            Field[] fields = table.getDeclaredFields();
-            while (rs.next()) {
-                TableRecord record = table.newInstance();
-
-                for (Field field : fields) {
-                    Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
-
-                    if (columnAnnotation != null) {
-                        field.setAccessible(true);
-
-                        Object data;
-                        if (field.getType() == Long.class) {
-                            data = rs.getLong(columnAnnotation.id());
-                        } else if (field.getType() == Integer.class) {
-                            data = rs.getInt(columnAnnotation.id());
-                        } else if (field.getType() == Double.class) {
-                            data = rs.getDouble(columnAnnotation.id());
-                        } else if (field.getType() == Date.class) {
-                            data = new Date(rs.getTimestamp(columnAnnotation.id()).getTime());
-                        } else {
-                            data = rs.getObject(columnAnnotation.id());
-                        }
-                        field.set(record, data);
-                    }
-                }
-
-                result.add(record);
-            }
-
+        try ( PreparedStatement ps = con.prepareStatement(sql) ) {
+            TableRecord[] result = executePreparedQuery(table, ps);
             log.debug("Selected successfully");
-            return result.toArray(new TableRecord[result.size()]);
+            return result;
 
         } catch (SQLException e) {
             log.error("Selecting failed", e);
@@ -396,5 +340,41 @@ public class JDBC {
         }
 
         return false;
+    }
+
+
+    private TableRecord[] executePreparedQuery(Class<? extends TableRecord> table, PreparedStatement ps) throws SQLException, InstantiationException, IllegalAccessException {
+        ResultSet rs = ps.executeQuery();
+
+        ArrayList<TableRecord> result = new ArrayList<>();
+        Field[] fields = table.getDeclaredFields();
+        while (rs.next()) {
+            TableRecord record = table.newInstance();
+
+            for (Field field : fields) {
+                Column columnAnnotation = field.getDeclaredAnnotation(Column.class);
+
+                if (columnAnnotation != null) {
+                    field.setAccessible(true);
+
+                    Object data;
+                    if (field.getType() == Long.class) {
+                        data = rs.getLong(columnAnnotation.id());
+                    } else if (field.getType() == Integer.class) {
+                        data = rs.getInt(columnAnnotation.id());
+                    } else if (field.getType() == Double.class) {
+                        data = rs.getDouble(columnAnnotation.id());
+                    } else if (field.getType() == Date.class) {
+                        data = new Date(rs.getTimestamp(columnAnnotation.id()).getTime());
+                    } else {
+                        data = rs.getObject(columnAnnotation.id());
+                    }
+                    field.set(record, data);
+                }
+            }
+
+            result.add(record);
+        }
+        return result.toArray(new TableRecord[result.size()]);
     }
 }
