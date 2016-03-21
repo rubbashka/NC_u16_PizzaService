@@ -1,16 +1,12 @@
 package unc.group16.bo.managers.oracle;
 
 import unc.group16.bo.interfaces.AbstractDatabaseManager;
-import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Pizza;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.ejb.Stateless;
 
-
-public class OraclePizzasManager extends AbstractDatabaseManager implements Manager<Pizza> {
+@Stateless
+public class OraclePizzasManager extends AbstractDatabaseManager<Pizza> {
     public Long create(Pizza pizza){
         return getJDBC().insert(pizza);
     }

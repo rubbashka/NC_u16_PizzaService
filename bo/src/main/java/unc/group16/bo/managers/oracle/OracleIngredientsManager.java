@@ -1,13 +1,12 @@
 package unc.group16.bo.managers.oracle;
 
 import unc.group16.bo.interfaces.AbstractDatabaseManager;
-import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Ingredient;
 
-import java.sql.*;
+import javax.ejb.Stateless;
 
-
-public class OracleIngredientsManager extends AbstractDatabaseManager implements Manager<Ingredient> {
+@Stateless
+public class OracleIngredientsManager extends AbstractDatabaseManager<Ingredient> {
     public Long create(Ingredient ingredient){
         return getJDBC().insert(ingredient);
     }

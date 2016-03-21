@@ -1,11 +1,13 @@
 package unc.group16.bo.managers.oracle;
 
 import unc.group16.bo.interfaces.AbstractDatabaseManager;
-import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Drink;
 
+import javax.ejb.Stateless;
 
-public class OracleDrinksManager extends AbstractDatabaseManager implements Manager<Drink> {
+
+@Stateless
+public class OracleDrinksManager extends AbstractDatabaseManager<Drink> {
     public Long create(Drink drink){
         return getJDBC().insert(drink);
     }

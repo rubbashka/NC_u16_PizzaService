@@ -1,13 +1,12 @@
 package unc.group16.bo.managers.oracle;
 
 import unc.group16.bo.interfaces.AbstractDatabaseManager;
-import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Order;
 
-import java.sql.*;
+import javax.ejb.Stateless;
 
-
-public class OracleOrdersManager extends AbstractDatabaseManager implements Manager<Order> {
+@Stateless
+public class OracleOrdersManager extends AbstractDatabaseManager<Order> {
     public Long create(Order order){
         return getJDBC().insert(order);
     }

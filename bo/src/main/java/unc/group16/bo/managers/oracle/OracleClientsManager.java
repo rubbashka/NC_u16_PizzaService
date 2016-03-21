@@ -1,13 +1,12 @@
 package unc.group16.bo.managers.oracle;
 
 import unc.group16.bo.interfaces.AbstractDatabaseManager;
-import unc.group16.bo.interfaces.Manager;
 import unc.group16.data.Client;
 
-import java.sql.*;
+import javax.ejb.Stateless;
 
-
-public class OracleClientsManager extends AbstractDatabaseManager implements Manager<Client> {
+@Stateless
+public class OracleClientsManager extends AbstractDatabaseManager<Client> {
     public Long create(Client client){
         return getJDBC().insert(client);
     }
